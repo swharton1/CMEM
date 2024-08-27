@@ -4,6 +4,7 @@ import os
 import pickle
 
 from . import get_names_and_units as gnau 
+from . import boundary_emissivity_functions as bef
 
 class compare_models():
     def __init__(self):
@@ -514,6 +515,9 @@ class magnetopause_model():
         self.bs = []
         self.params = []
         self.density = []
+        self.pdyn = []
+        self.pmag = []
+        self.bz = [] 
 
         for p, pval in enumerate(self.pickle_dict):
             # For the slice with constant y. 
@@ -539,7 +543,10 @@ class magnetopause_model():
 
             # Get density. 
             density = pval["density"]
-
+            pdyn = pval["pdyn"]
+            pmag = pval["pmag"]
+            #bz = pval["bz"] 
+			
             # Get parameter label information for plotting. 
             if p == 0: 
                 self.param_list = pval["parameter list"]
@@ -551,6 +558,9 @@ class magnetopause_model():
             self.bs.append(bs)
             self.params.append(params)
             self.density.append(density)
+            self.pdyn.append(pdyn)
+            self.pmag.append(pmag)
+            #self.bz.append(bz) 
 
     def get_magnetopause_positions(self):
         '''This will go through the Earth-Sun line data and work out the magnetopause position from
@@ -569,10 +579,16 @@ class magnetopause_model():
             etam = self.etam_array[p]
             etad = self.etad_array[p]
 
-            # Get CMEM magnetopause first. 
-            xp_index = np.where(etam == etam.max())
-            self.r_cmem_array.append(xp[xp_index])
-
+            # Get CMEM magnetopause first. OLD DEFINITION. 
+            #xp_index = np.where(etam == etam.max())
+            #self.r_cmem_array.append(xp[xp_index])
+			#Get Lin coefficients. 
+			
+            lin_coeffs = bef.get_lin_coeffs(0, self.pdyn[p], self.pmag[p], -5.0)
+            #Get Lin magnetopause for a range of theta and phi 
+            rmp = bef.lin_scaled_func(0, 0, *lin_coeffs, p0=self.params[p][0], p1=self.params[p][7], p2=self.params[p][8], p3=self.params[p][9]) 
+            self.r_cmem_array.append(rmp) 
+			
             # Get max Ix second. 
             ix_index = np.where(etad == etad.max())
             self.maxIx_array.append(xp[ix_index])
@@ -658,7 +674,7 @@ class magnetopause_model():
         fig.text(0.5, 0.02, label, ha='center')
 
         # Now add on the magnetopause boundaries. 
-        ax.plot([self.r_cmem_array[sim], self.r_cmem_array[sim]], [0, self.etam_array[sim].max()], 'r--', label=r"$r_{CMEM}$ = "+"{:.3f}".format(self.r_cmem_array[sim][0]))
+        ax.plot([self.r_cmem_array[sim], self.r_cmem_array[sim]], [0, self.etam_array[sim].max()], 'r--', label=r"$r_{CMEM}$ = "+"{:.3f}".format(self.r_cmem_array[sim]))
         ax.text(self.r_cmem_array[sim], self.etam_array[sim].max(), r"$r_{CMEM}$", va="bottom", ha='right')
 
         ax.plot([self.maxIx_array[sim], self.maxIx_array[sim]], [0, self.etad_array[sim].max()], 'k--', label=r"max $Ix$ = "+"{:.3f}".format(self.maxIx_array[sim][0]))
@@ -700,18 +716,18 @@ class magnetopause_model():
 
         # Calculate mean differences. 
         self.mean_r = np.mean(self.r_cmem_array-self.r_cmem_array)
-        self.mean_maxIx = np.mean(self.maxIx_array-self.r_cmem_array)
-        self.mean_maxdIx = np.mean(self.maxdIx_array-self.r_cmem_array)
-        self.mean_f = np.mean(self.f_array-self.r_cmem_array)
+        self.mean_maxIx = np.mean(self.maxIx_array[:,0][1:]-self.r_cmem_array[1:])
+        self.mean_maxdIx = np.mean(self.maxdIx_array[:,0][1:]-self.r_cmem_array[1:])
+        self.mean_f = np.mean(self.f_array[:,0][1:]-self.r_cmem_array[1:])
 
         ax2.plot(self.density, self.r_cmem_array-self.r_cmem_array, c='r', linestyle="dotted", marker='x', label="Mean = {:.3f}".format(self.mean_r)+r"$R_E$")
-        ax2.plot(self.density, self.maxIx_array-self.r_cmem_array, c='k', linestyle="dotted", marker='^', label="Mean = {:.3f}".format(self.mean_maxIx)+r"$R_E$")
-        ax2.plot(self.density, self.f_array-self.r_cmem_array, c='g', linestyle="dotted", marker='s', label="Mean = {:.3f}".format(self.mean_f)+r"$R_E$")
-        ax2.plot(self.density, self.maxdIx_array-self.r_cmem_array, c='b', linestyle="dotted", marker='o', label="Mean = {:.3f}".format(self.mean_maxdIx)+r"$R_E$")
+        ax2.plot(self.density, self.maxIx_array[:,0]-self.r_cmem_array, c='k', linestyle="dotted", marker='^', label="Mean = {:.3f}".format(self.mean_maxIx)+r"$R_E$")
+        ax2.plot(self.density, self.f_array[:,0]-self.r_cmem_array, c='g', linestyle="dotted", marker='s', label="Mean = {:.3f}".format(self.mean_f)+r"$R_E$")
+        ax2.plot(self.density, self.maxdIx_array[:,0]-self.r_cmem_array, c='b', linestyle="dotted", marker='o', label="Mean = {:.3f}".format(self.mean_maxdIx)+r"$R_E$")
         ax2.set_xlabel("Density (cm"+r"$^{-3}$"+")")
         ax2.set_xlim(0,40)
         ax2.set_ylabel(r"$\Delta R_E$")
-        ax2.set_ylim(-0.8, 0.8)
+        ax2.set_ylim(-0.8, 1.0)
         ax2.legend(fontsize=8)
         ax2.set_title("Relative Subsolar Magnetopause Boundary Positions", fontsize=12)
         ax2.grid()
