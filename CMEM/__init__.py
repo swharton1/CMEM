@@ -21,5 +21,6 @@ from . import compare_optimised_models
 from . import get_names_and_units 
 from . import boundary_emissivity_functions 
 from . import set_initial_params 
+from . import get_meridians
 
  

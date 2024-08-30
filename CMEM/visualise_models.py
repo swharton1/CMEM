@@ -5,6 +5,7 @@ import pickle
 from matplotlib.patches import Wedge, Polygon, Circle
 import string 
 from . import get_names_and_units as gnau 
+from . import get_meridians as gm 
 
 # Create a separate object to analyse the results of the fitting procedure. 
 # This means the optimisation doesn't need running every time you change a plot! 
@@ -184,28 +185,33 @@ class analyse_model():
         '''
 
         
+        #Get meridian data for etad. 
+        xp_y, yp_y, zp_y, etad_y, xp_z, yp_z, zp_z, etad_z = gm.calculate_meridian_planes(self.model['x'], self.model['y'], self.model['z'], self.model['etad'])
+        
+        #Get meridian data for etam. 
+        xp_y, yp_y, zp_y, etam_y, xp_z, yp_z, zp_z, etam_z = gm.calculate_meridian_planes(self.model['x'], self.model['y'], self.model['z'], self.model['etam'])
         
         # For the slice with constant y. 
-        y_uniq = abs(self.model['y'][0,:,0])
-        i_y = np.where(y_uniq == min(y_uniq))[0][0]
+        #y_uniq = abs(self.model['y'][0,:,0])
+        #i_y = np.where(y_uniq == min(y_uniq))[0][0]
         # i_y = self.model.n[1]//2
-        xp_y = self.model['x'][:,i_y]
-        yp_y = self.model['y'][:,i_y]
-        zp_y = self.model['z'][:,i_y]
-        etad_y = self.model['etad'][:,i_y]
-        etam_y = self.model['etam'][:,i_y]
-        plane_value_y = self.model['y'][0,i_y,0]
+        #xp_y = self.model['x'][:,i_y]
+        #yp_y = self.model['y'][:,i_y]
+        #zp_y = self.model['z'][:,i_y]
+        #etad_y = self.model['etad'][:,i_y]
+        #etam_y = self.model['etam'][:,i_y]
+        #plane_value_y = self.model['y'][0,i_y,0]
 
         # For the slice with constant z. 
-        z_uniq = abs(self.model['z'][:,0,0])
-        i_z = np.where(z_uniq == min(z_uniq))[0][0]
+        #z_uniq = abs(self.model['z'][:,0,0])
+        #i_z = np.where(z_uniq == min(z_uniq))[0][0]
         # i_z = self.model.n[2]//2
-        xp_z = self.model['x'][i_z]
-        yp_z = self.model['y'][i_z]
-        zp_z = self.model['z'][i_z]
-        etad_z = self.model['etad'][i_z]
-        etam_z = self.model['etam'][i_z]
-        plane_value_z = self.model['z'][i_z,0,0]
+        #xp_z = self.model['x'][i_z]
+        #yp_z = self.model['y'][i_z]
+        #zp_z = self.model['z'][i_z]
+        #etad_z = self.model['etad'][i_z]
+        #etam_z = self.model['etam'][i_z]
+        #plane_value_z = self.model['z'][i_z,0,0]
         
         # Calculate log10 eta values. If eta = 0, set log(eta) = vmin  
         letad_y = np.zeros(etad_y.shape)+vmin
@@ -237,7 +243,7 @@ class analyse_model():
         cont1 = ax1.contourf(xp_y, zp_y, letad_y, cmap=cmap, levels=levels, vmin=vmin, vmax=vmax)
         ax1.set_xlabel('X [RE]')
         ax1.set_ylabel('Z [RE]')
-        ax1.set_title("n = {:.2f} cm".format(self.model['density'])+"\nY = {:.2f}".format(plane_value_y))
+        ax1.set_title("n = {:.2f} cm".format(self.model['density'])+"\nXZ Plane")
         ax1.set_aspect("equal")
         self.make_earth(ax1, rotation=-90)
 
@@ -257,7 +263,7 @@ class analyse_model():
         cont2 = ax2.contourf(xp_y, zp_y, letam_y, cmap=cmap, levels=cont1.levels, vmin=vmin, vmax=vmax)
         ax2.set_xlabel('X [RE]')
         ax2.set_ylabel('Z [RE]')
-        ax2.set_title("{}\nY = {:.2f}".format(self.image_tag,plane_value_y))
+        ax2.set_title("{}\nXZ Plane".format(self.image_tag))
         ax2.set_aspect("equal")
         self.make_earth(ax2, rotation=-90)
 
@@ -275,7 +281,7 @@ class analyse_model():
         cont3 = ax3.contourf(xp_z, yp_z, letad_z, cmap=cmap, levels=levels, vmin=vmin, vmax=vmax)
         ax3.set_xlabel('X [RE]')
         ax3.set_ylabel('Y [RE]')
-        ax3.set_title("Z = {:.2f}".format(plane_value_z))
+        ax3.set_title("XY Plane")
         ax3.set_aspect("equal")
         self.make_earth(ax3, rotation=-90)
 
@@ -293,7 +299,7 @@ class analyse_model():
         cont4 = ax4.contourf(xp_z, yp_z, letam_z, cmap=cmap, levels=cont3.levels, vmin=vmin, vmax=vmax)
         ax4.set_xlabel('X [RE]')
         ax4.set_ylabel('Y [RE]')
-        ax4.set_title("Z = {:.2f}".format(plane_value_z))
+        ax4.set_title("XY Plane")
         ax4.set_aspect("equal")
         self.make_earth(ax4, rotation=-90)
 

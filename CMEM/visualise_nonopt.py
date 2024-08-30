@@ -9,7 +9,8 @@ import os
 try: 
     from . import read_ppmlr
     from . import get_names_and_units as gnau 
-     
+    from . import get_meridians as gm 
+    
 except(ImportError):
     print ("Are you working from the right directory? ")
     print ("If the interactive window is run from the wrong directory, it won't work. ")
@@ -339,29 +340,12 @@ class compare_data_model():
         levels - number of levels on the contour map. 
         '''
  
+        #Get meridian data for etad. 
+        xp_y, yp_y, zp_y, etad_y, xp_z, yp_z, zp_z, etad_z = gm.calculate_meridian_planes(self.x, self.y, self.z, self.eta)
         
-        # For the slice with constant y. 
-        y_uniq = abs(self.y[0,:,0])
-        i_y = np.where(y_uniq == min(y_uniq))[0][0]
-        # i_y = self.n[1]//2
-        xp_y = self.x[:,i_y]
-        yp_y = self.y[:,i_y]
-        zp_y = self.z[:,i_y]
-        etad_y = self.eta[:,i_y]
-        etam_y = self.eta_model[:,i_y]
-        plane_value_y = self.y[0,i_y,0]
+        #Get meridian data for etam. 
+        xp_y, yp_y, zp_y, etam_y, xp_z, yp_z, zp_z, etam_z = gm.calculate_meridian_planes(self.x, self.y, self.z, self.eta_model)
         
-
-        # For the slice with constant z. 
-        z_uniq = abs(self.z[:,0,0])
-        i_z = np.where(z_uniq == min(z_uniq))[0][0]
-        # i_z = self.n[2]//2
-        xp_z = self.x[i_z]
-        yp_z = self.y[i_z]
-        zp_z = self.z[i_z]
-        etad_z = self.eta[i_z]
-        etam_z = self.eta_model[i_z]
-        plane_value_z = self.z[i_z,0,0]
         
         # Calculate log10 eta values. If eta = 0, set log(eta) = -12  
         letad_y = np.zeros(etad_y.shape)+vmin
@@ -403,7 +387,7 @@ class compare_data_model():
         cont1 = ax1.contourf(xp_y, zp_y, letad_y, cmap='hot', levels=levels, vmin=vmin, vmax=vmax)
         ax1.set_xlabel('X [RE]')
         ax1.set_ylabel('Z [RE]')
-        ax1.set_title("n = {:.2f} cm".format(self.density)+"\nY = {:.2f}".format(plane_value_y))
+        ax1.set_title("n = {:.2f} cm".format(self.density)+"\nXZ Plane")
         ax1.set_aspect("equal")
         self.make_earth(ax1, rotation=-90)
 
@@ -423,7 +407,7 @@ class compare_data_model():
         cont2 = ax2.contourf(xp_y, zp_y, letam_y, cmap='hot', levels=cont1.levels, vmin=vmin, vmax=vmax)
         ax2.set_xlabel('X [RE]')
         ax2.set_ylabel('Z [RE]')
-        ax2.set_title("{}\nY = {:.2f}".format(self.image_tag,plane_value_y))
+        ax2.set_title("{}\nXZ Plane".format(self.image_tag))
         ax2.set_aspect("equal")
         self.make_earth(ax2, rotation=-90)
 
@@ -441,7 +425,7 @@ class compare_data_model():
         cont3 = ax3.contourf(xp_z, yp_z, letad_z, cmap='hot', levels=levels, vmin=vmin, vmax=vmax)
         ax3.set_xlabel('X [RE]')
         ax3.set_ylabel('Y [RE]')
-        ax3.set_title("Z = {:.2f}".format(plane_value_z))
+        ax3.set_title("XY Plane")
         ax3.set_aspect("equal")
         self.make_earth(ax3, rotation=-90)
 
@@ -459,7 +443,7 @@ class compare_data_model():
         cont4 = ax4.contourf(xp_z, yp_z, letam_z, cmap='hot', levels=cont3.levels, vmin=vmin, vmax=vmax)
         ax4.set_xlabel('X [RE]')
         ax4.set_ylabel('Y [RE]')
-        ax4.set_title("Z = {:.2f}".format(plane_value_z))
+        ax4.set_title("XY Plane")
         ax4.set_aspect("equal")
         self.make_earth(ax4, rotation=-90)
 
