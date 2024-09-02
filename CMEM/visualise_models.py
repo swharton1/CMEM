@@ -342,24 +342,7 @@ class analyse_model():
 		#Get Earth_sun line data for emissivity model. 
         xp, yp, zp, etam = gm.calculate_sunearth_line(self.model['x'], self.model['y'], self.model['z'], self.model['etam'])
         
-        # For the slice with constant y. 
-        #y_uniq = abs(self.model['y'][0,:,0])
-        #i_y = np.where(y_uniq == min(y_uniq))[0][0]
 
-        # For the slice with constant z. 
-        #z_uniq = abs(self.model['z'][:,0,0])
-        #i_z = np.where(z_uniq == min(z_uniq))[0][0]
-
-        # Get data along sun-earth line. 
-        #xp = self.model['x'][i_z,i_y]
-        #yp = self.model['y'][i_z,i_y]
-        #zp = self.model['z'][i_z,i_y]
-        #etad = self.model['etad'][i_z,i_y]
-        #etam = self.model['etam'][i_z,i_y]
-        #plane_value_y = self.model['y'][0,i_y,0]
-        #plane_value_z = self.model['z'][i_z,0,0]
-
-        # Separate the model line into three colours for the different model sections. 
         # Separate the model line into three colours for the different model sections. 
         if self.current_model == "jorg":
         	i_msphere = np.where(xp <= self.model['params best nm'][0])

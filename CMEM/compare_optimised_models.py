@@ -527,23 +527,6 @@ class magnetopause_model():
 		
 		    #Get Earth_sun line data for emissivity model. 
             xp, yp, zp, etam = gm.calculate_sunearth_line(pval['x'], pval['y'], pval['z'], pval['etam'])
-            
-            # For the slice with constant y. 
-            #y_uniq = abs(pval['y'][0,:,0])
-            #i_y = np.where(y_uniq == min(y_uniq))[0][0]
-
-            # For the slice with constant z. 
-            #z_uniq = abs(pval['z'][:,0,0])
-            #i_z = np.where(z_uniq == min(z_uniq))[0][0]
-
-            # Get data along sun-earth line. 
-            #xp = pval['x'][i_z,i_y]
-            #yp = pval['y'][i_z,i_y]
-            #zp = pval['z'][i_z,i_y]
-            #etad = pval['etad'][i_z,i_y]
-            #etam = pval['etam'][i_z,i_y]
-            #plane_value_y = pval['y'][0,i_y,0]
-            #plane_value_z = pval['z'][i_z,0,0]
 
             # Get bowshock parameter too. You will need it. 
             bs = pval["params best nm"][1]
