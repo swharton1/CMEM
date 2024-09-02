@@ -387,7 +387,7 @@ class compare_data_model():
         cont1 = ax1.contourf(xp_y, zp_y, letad_y, cmap='hot', levels=levels, vmin=vmin, vmax=vmax)
         ax1.set_xlabel('X [RE]')
         ax1.set_ylabel('Z [RE]')
-        ax1.set_title("n = {:.2f} cm".format(self.density)+"\nXZ Plane")
+        ax1.set_title("n = {:.2f} cm".format(self.density)+r"$^{-3}$"+"\nXZ Plane")
         ax1.set_aspect("equal")
         self.make_earth(ax1, rotation=-90)
 
@@ -480,22 +480,12 @@ class compare_data_model():
         This will make it easier to see how the function compares to the simulation. 
         '''
 
-        # For the slice with constant y. 
-        y_uniq = abs(self.y[0,:,0])
-        i_y = np.where(y_uniq == min(y_uniq))[0][0]
+		#Get Earth_sun line data for emissivity data. 
+        xp, yp, zp, etad = gm.calculate_sunearth_line(self.x, self.y, self.z, self.eta)
+		
+		#Get Earth_sun line data for emissivity model. 
+        xp, yp, zp, etam = gm.calculate_sunearth_line(self.x, self.y, self.z, self.eta_model)
 
-        # For the slice with constant z. 
-        z_uniq = abs(self.z[:,0,0])
-        i_z = np.where(z_uniq == min(z_uniq))[0][0]
-
-        # Get data along sun-earth line. 
-        xp = self.x[i_z,i_y]
-        yp = self.y[i_z,i_y]
-        zp = self.z[i_z,i_y]
-        etad = self.eta[i_z,i_y]
-        etam = self.eta_model[i_z,i_y]
-        plane_value_y = self.y[0,i_y,0]
-        plane_value_z = self.z[i_z,0,0]
 
         # Separate the model line into three colours for the different model sections. 
         if self.current_model == "jorg":
@@ -539,6 +529,7 @@ class compare_data_model():
         self.fig_sunearth = fig 
 
         if save: 
+            print ("{}/{}_data_{}_model_sunearth_nonopt{}.png".format(self.current_model, self.filename, self.current_model, savetag))
             fig.savefig(os.environ.get("PLOT_PATH")+"{}/{}_data_{}_model_sunearth_nonopt{}.png".format(self.current_model, self.filename, self.current_model, savetag))
            
 

@@ -5,6 +5,7 @@ import pickle
 
 from . import get_names_and_units as gnau 
 from . import boundary_emissivity_functions as bef
+from . import get_meridians as gm 
 
 class compare_models():
     def __init__(self):
@@ -520,22 +521,29 @@ class magnetopause_model():
         self.bz = [] 
 
         for p, pval in enumerate(self.pickle_dict):
+            
+            #Get Earth_sun line data for emissivity data. 
+            xp, yp, zp, etad = gm.calculate_sunearth_line(pval['x'], pval['y'], pval['z'], pval['etad'])
+		
+		    #Get Earth_sun line data for emissivity model. 
+            xp, yp, zp, etam = gm.calculate_sunearth_line(pval['x'], pval['y'], pval['z'], pval['etam'])
+            
             # For the slice with constant y. 
-            y_uniq = abs(pval['y'][0,:,0])
-            i_y = np.where(y_uniq == min(y_uniq))[0][0]
+            #y_uniq = abs(pval['y'][0,:,0])
+            #i_y = np.where(y_uniq == min(y_uniq))[0][0]
 
             # For the slice with constant z. 
-            z_uniq = abs(pval['z'][:,0,0])
-            i_z = np.where(z_uniq == min(z_uniq))[0][0]
+            #z_uniq = abs(pval['z'][:,0,0])
+            #i_z = np.where(z_uniq == min(z_uniq))[0][0]
 
             # Get data along sun-earth line. 
-            xp = pval['x'][i_z,i_y]
-            yp = pval['y'][i_z,i_y]
-            zp = pval['z'][i_z,i_y]
-            etad = pval['etad'][i_z,i_y]
-            etam = pval['etam'][i_z,i_y]
-            plane_value_y = pval['y'][0,i_y,0]
-            plane_value_z = pval['z'][i_z,0,0]
+            #xp = pval['x'][i_z,i_y]
+            #yp = pval['y'][i_z,i_y]
+            #zp = pval['z'][i_z,i_y]
+            #etad = pval['etad'][i_z,i_y]
+            #etam = pval['etam'][i_z,i_y]
+            #plane_value_y = pval['y'][0,i_y,0]
+            #plane_value_z = pval['z'][i_z,0,0]
 
             # Get bowshock parameter too. You will need it. 
             bs = pval["params best nm"][1]

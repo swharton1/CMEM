@@ -243,7 +243,7 @@ class analyse_model():
         cont1 = ax1.contourf(xp_y, zp_y, letad_y, cmap=cmap, levels=levels, vmin=vmin, vmax=vmax)
         ax1.set_xlabel('X [RE]')
         ax1.set_ylabel('Z [RE]')
-        ax1.set_title("n = {:.2f} cm".format(self.model['density'])+"\nXZ Plane")
+        ax1.set_title("n = {:.2f} cm".format(self.model['density'])+r"$^{-3}$"+"\nXZ Plane")
         ax1.set_aspect("equal")
         self.make_earth(ax1, rotation=-90)
 
@@ -336,22 +336,28 @@ class analyse_model():
         This will make it easier to see how the function compares to the simulation. 
         '''
 
+        #Get Earth_sun line data for emissivity data. 
+        xp, yp, zp, etad = gm.calculate_sunearth_line(self.model['x'], self.model['y'], self.model['z'], self.model['etad'])
+		
+		#Get Earth_sun line data for emissivity model. 
+        xp, yp, zp, etam = gm.calculate_sunearth_line(self.model['x'], self.model['y'], self.model['z'], self.model['etam'])
+        
         # For the slice with constant y. 
-        y_uniq = abs(self.model['y'][0,:,0])
-        i_y = np.where(y_uniq == min(y_uniq))[0][0]
+        #y_uniq = abs(self.model['y'][0,:,0])
+        #i_y = np.where(y_uniq == min(y_uniq))[0][0]
 
         # For the slice with constant z. 
-        z_uniq = abs(self.model['z'][:,0,0])
-        i_z = np.where(z_uniq == min(z_uniq))[0][0]
+        #z_uniq = abs(self.model['z'][:,0,0])
+        #i_z = np.where(z_uniq == min(z_uniq))[0][0]
 
         # Get data along sun-earth line. 
-        xp = self.model['x'][i_z,i_y]
-        yp = self.model['y'][i_z,i_y]
-        zp = self.model['z'][i_z,i_y]
-        etad = self.model['etad'][i_z,i_y]
-        etam = self.model['etam'][i_z,i_y]
-        plane_value_y = self.model['y'][0,i_y,0]
-        plane_value_z = self.model['z'][i_z,0,0]
+        #xp = self.model['x'][i_z,i_y]
+        #yp = self.model['y'][i_z,i_y]
+        #zp = self.model['z'][i_z,i_y]
+        #etad = self.model['etad'][i_z,i_y]
+        #etam = self.model['etam'][i_z,i_y]
+        #plane_value_y = self.model['y'][0,i_y,0]
+        #plane_value_z = self.model['z'][i_z,0,0]
 
         # Separate the model line into three colours for the different model sections. 
         # Separate the model line into three colours for the different model sections. 
