@@ -217,18 +217,30 @@ class analyse_model():
         letad_y = np.zeros(etad_y.shape)+vmin
         i = np.where(etad_y != 0)
         letad_y[i] = np.log10(etad_y[i])
+        j = np.where(letad_y < vmin)
+        letad_y[j] = vmin 
+
 
         letam_y = np.zeros(etam_y.shape)+vmin
         i = np.where(etam_y != 0)
         letam_y[i] = np.log10(etam_y[i])
+        j = np.where(letam_y < vmin)
+        letam_y[j] = vmin 
+
 
         letad_z = np.zeros(etad_z.shape)+vmin
         i = np.where(etad_z != 0)
         letad_z[i] = np.log10(etad_z[i])
+        j = np.where(letad_z < vmin)
+        letad_z[j] = vmin 
+
 
         letam_z = np.zeros(etam_z.shape)+vmin
         i = np.where(etam_z != 0)
         letam_z[i] = np.log10(etam_z[i])
+        j = np.where(letam_z < vmin)
+        letam_z[j] = vmin 
+
         
         
         # Now you can make the contour plot. 
