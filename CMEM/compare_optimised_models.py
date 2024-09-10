@@ -646,21 +646,31 @@ class magnetopause_model():
         
         ax.set_xlim(xlim)
 
-        # Add a label to show the model parameters. 
         label = ""
+        info = gnau.get_parameter_info(model='cmem')
+        parameter_names = [info[i][0] for i in info.keys()]
+        parameter_units = [info[i][1] for i in info.keys()]
         for p,pval in enumerate(self.params[sim]):
+                pv = pval 
+                label += "{}={} {}, ".format(parameter_names[p], self.sig_figs(pv,3), parameter_units[p])
+                if len(parameter_names)//2 == p+1:
+                    label += "\n"
+                    
+        # Add a label to show the model parameters. 
+        #label = ""
+        #for p,pval in enumerate(self.params[sim]):
                 
-            param = self.param_list[p] if p > 0 else r"$p_0$"
+        #    param = self.param_list[p] if p > 0 else r"$p_0$"
             # unit = self.param_unit[p] if p > 0 else ""
             # Correct label for A1, A2 and B. Urgh! 
-            if (p < 2) or (p > 3):
-                punit = self.param_unit[p]
-            else:
-                punit = "eV cm"+r"$^{-3}$"+" s"+r"$^{-1}$"
+        #    if (p < 2) or (p > 3):
+        #        punit = self.param_unit[p]
+        #    else:
+        #        punit = "eV cm"+r"$^{-3}$"+" s"+r"$^{-1}$"
 
-            label += "{}={} {}, ".format(param, self.sig_figs(pval,3), punit)
-            if len(self.param_list)//2 == p+2:
-                label += "\n"
+        #    label += "{}={} {}, ".format(param, self.sig_figs(pval,3), punit)
+        #    if len(self.param_list)//2 == p+2:
+        #        label += "\n"
 
         fig.text(0.5, 0.02, label, ha='center')
 
