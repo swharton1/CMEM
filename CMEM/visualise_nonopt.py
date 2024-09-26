@@ -95,9 +95,9 @@ class compare_data_model():
         print ("Calculated model eta values: {:.1f}s".format(te-ts))
 
         if self.current_model == "cmem":
-        	self.image_tag = "CMEM"
+            self.image_tag = "CMEM"
         else:
-        	self.image_tag = self.current_model.capitalize()
+            self.image_tag = self.current_model.capitalize()
 
 
 
@@ -105,21 +105,21 @@ class compare_data_model():
         return ("Custom compare_data_model object for the file: {}".format(self.filename))
     
     def modify_parameters_jorg(self, mp=None, bs=None, A1=None, A2=None): 
-    	'''This function will manually update the parameters mp, bs, A1 and A2. Use for CMEM model. '''
-    	print (mp, bs, A1, A2) 
-    	
-    	#Update parameters. 
-    	new_params = (mp, bs, A1, A2, *self.params0[4:])
-    	self.params0 = new_params  
-    	
+        '''This function will manually update the parameters mp, bs, A1 and A2. Use for CMEM model. '''
+        print (mp, bs, A1, A2) 
+        
+        #Update parameters. 
+        new_params = (mp, bs, A1, A2, *self.params0[4:])
+        self.params0 = new_params  
+        
     def modify_parameters_cmem(self, p0=None, bs=None, A1=None, A2=None): 
-    	'''This function will manually update the parameters p0, bs, A1 and A2. Use for CMEM model. '''
-    	print (p0, bs, A1, A2) 
-    	
-    	#Update parameters. 
-    	new_params = (p0, bs, A1, A2, *self.params0[4:])
-    	self.params0 = new_params 
-    		
+        '''This function will manually update the parameters p0, bs, A1 and A2. Use for CMEM model. '''
+        print (p0, bs, A1, A2) 
+        
+        #Update parameters. 
+        new_params = (p0, bs, A1, A2, *self.params0[4:])
+        self.params0 = new_params 
+            
     def convert_xyz_to_shue_coords(self, x, y, z):
         '''This will convert the x,y,z coordinates to those used in the Shue model 
          of the magnetopause and bowshock. 
@@ -482,23 +482,23 @@ class compare_data_model():
         This will make it easier to see how the function compares to the simulation. 
         '''
 
-		#Get Earth_sun line data for emissivity data. 
+        #Get Earth_sun line data for emissivity data. 
         xp, yp, zp, etad = gm.calculate_sunearth_line(self.x, self.y, self.z, self.eta)
-		
-		#Get Earth_sun line data for emissivity model. 
+        
+        #Get Earth_sun line data for emissivity model. 
         xp, yp, zp, etam = gm.calculate_sunearth_line(self.x, self.y, self.z, self.eta_model)
 
 
         # Separate the model line into three colours for the different model sections. 
         if self.current_model == "jorg":
-        	i_msphere = np.where(xp <= self.params0[0])
-        	i_msheath = np.where((xp > self.params0[0]) & (xp <= self.params0[1]))
-        	i_bow = np.where(xp > self.params0[1])
+            i_msphere = np.where(xp <= self.params0[0])
+            i_msheath = np.where((xp > self.params0[0]) & (xp <= self.params0[1]))
+            i_bow = np.where(xp > self.params0[1])
         elif self.current_model == "cmem":
-        	i_msphere = np.where(xp <= self.params0[0]*self.r0_lin)
-        	i_msheath = np.where((xp > self.params0[0]*self.r0_lin) & (xp <= self.params0[1]))
-        	i_bow = np.where(xp > self.params0[1])
-        	
+            i_msphere = np.where(xp <= self.params0[0]*self.r0_lin)
+            i_msheath = np.where((xp > self.params0[0]*self.r0_lin) & (xp <= self.params0[1]))
+            i_bow = np.where(xp > self.params0[1])
+            
         # Now you can make the contour plot. 
         fig = plt.figure(figsize=(8,6))
         fig.subplots_adjust(bottom=0.20, top=0.80)
@@ -515,7 +515,7 @@ class compare_data_model():
         ax.set_title("Simulation Data vs {} Model - Sun-Earth Line\nn = {:.2f} cm".format(self.image_tag, self.density)+r"$^{-3}$"+"\nInitial Parameters")
         ax.set_xlim(0,25)
 
-	# Add a label to show the model parameters. 
+    # Add a label to show the model parameters. 
         label = ""
         info = gnau.get_parameter_info(model=self.current_model)
         parameter_names = [info[i][0] for i in info.keys()]
@@ -551,7 +551,7 @@ class compare_data_model():
         xval2 = np.append(r*np.cos(theta2*(np.pi/180)),0)
         yval2 = np.append(r*np.sin(theta2*(np.pi/180)),0)
         verts2 = [[xval2[i],yval2[i]] for i in range(len(xval2))]
-		
+        
         polygon2 = Polygon(verts2, closed=True, edgecolor='navy', facecolor='navy', alpha=1) 
         ax.add_patch(polygon2)
     

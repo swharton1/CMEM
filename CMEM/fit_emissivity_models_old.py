@@ -358,7 +358,7 @@ class threed_models():
         else:
             raise ValueError("Invalid cost function chosen. Select either 'sum squares', 'absolute' or 'normalised'.") 
 
-	#METHOD 1 INITIALISING FUNCTIONS 
+    #METHOD 1 INITIALISING FUNCTIONS 
 
     def get_initial_magnetopause(self):
         '''This uses equation 12 in Shue et al. (1997) to estimate the initial 
@@ -413,17 +413,17 @@ class threed_models():
         self.r0_lin = 12.544*((pd+pm)**-0.194)*(1 + 0.305*((np.exp(0.0573*bz) -1 )/(np.exp(2.178*bz) + 1)))
 
 
-	#METHOD 2 INITIALISING FUNCTIONS 
-	
+    #METHOD 2 INITIALISING FUNCTIONS 
+    
     def get_initial_mp_method2(self, density):
-    	'''Gets mp for method 2'''
-	
-    	return -0.10*density + 10.28
-	
+        '''Gets mp for method 2'''
+    
+        return -0.10*density + 10.28
+    
     def get_initial_bs_method2(self, density):
-	    '''Gets bs for method 2'''
-		
-	    return -0.12*density + 13.24 
+        '''Gets bs for method 2'''
+        
+        return -0.12*density + 13.24 
 
     def get_initial_A1_method2(self, density):
         '''This function estimates the initial value of the parameter A1 for the Jorgensen model. '''
@@ -436,12 +436,12 @@ class threed_models():
         return 0.0000009*density - 0.0000010
 
     def get_initial_p0_method2(self, density):
-    	'''Gets p0 for CMEM for method 2'''
-		
-    	return  0.0022*density + 0.7753
-		
-		
-		   
+        '''Gets p0 for CMEM for method 2'''
+        
+        return  0.0022*density + 0.7753
+        
+        
+           
     def fit_function_with_nelder_mead(self, model = "jorg", params0 = None, set_param_bounds=False, cost_func="normalised", init_method=1):
         '''This uses a Nelder-Mead minimisation technique to find the best 
         parameters for the chosen model to the data. 
@@ -482,26 +482,26 @@ class threed_models():
                 # mp, bs, A1, A2, B, alpha, beta, ay_mp, az_mp, ay_bs, az_bs. 
                 
                 if self.init_method == 1: 
-                	# These values are rounded values taken from a model run in Jorgensen et al, except those calculate using the functions below. 
+                    # These values are rounded values taken from a model run in Jorgensen et al, except those calculate using the functions below. 
                 
-                	# Get initial Mp using Shue et al. (1997) formula. Initial Bs is Mp + 3. 
-                	mp_i = self.get_initial_magnetopause() 
+                    # Get initial Mp using Shue et al. (1997) formula. Initial Bs is Mp + 3. 
+                    mp_i = self.get_initial_magnetopause() 
 
-                	# Get initial alpha values for Mp. Bs values are Mp + 0.2. 
-                	alpha_i = self.get_initial_alpha()
+                    # Get initial alpha values for Mp. Bs values are Mp + 0.2. 
+                    alpha_i = self.get_initial_alpha()
 
-                	self.params0 = (mp_i,mp_i+3, 0.000032, 0.000013, -0.000018, 2.5, -1.6, alpha_i, alpha_i, alpha_i+0.2, alpha_i+0.2)
-					
+                    self.params0 = (mp_i,mp_i+3, 0.000032, 0.000013, -0.000018, 2.5, -1.6, alpha_i, alpha_i, alpha_i+0.2, alpha_i+0.2)
+                    
                 elif self.init_method == 2: 
-                	mp = self.get_initial_mp_method2(self.density)
-                	bs = self.get_initial_bs_method2(self.density)
-                	A1 = self.get_initial_A1_method2(self.density)
-                	A2 = self.get_initial_A2_method2(self.density)
+                    mp = self.get_initial_mp_method2(self.density)
+                    bs = self.get_initial_bs_method2(self.density)
+                    A1 = self.get_initial_A1_method2(self.density)
+                    A2 = self.get_initial_A2_method2(self.density)
                 
-                	# Get initial alpha values for Mp. Bs values are Mp + 0.2. 
-                	alpha_i = self.get_initial_alpha()
+                    # Get initial alpha values for Mp. Bs values are Mp + 0.2. 
+                    alpha_i = self.get_initial_alpha()
 
-                	self.params0 = (mp, bs, A1, A2, -0.000018, 2.5, -1.6, alpha_i, alpha_i, alpha_i+0.2, alpha_i+0.2)
+                    self.params0 = (mp, bs, A1, A2, -0.000018, 2.5, -1.6, alpha_i, alpha_i, alpha_i+0.2, alpha_i+0.2)
                 # params0 = (8, 11, 0.000032, 0.000013, -0.000018, 2.5, -1.6, 0.6, 0.4, 0.8, 0.8)
                 
             elif self.current_model == "cmem":
@@ -512,31 +512,31 @@ class threed_models():
                 
                 
                 if self.init_method == 1: 
-                	# A1, A2, B, alpha and beta are rounded values from Jorgensen et al. (2019).
-                	# p values to scale magnetopause are from inspection of an example. (1,1,3,4) 
-                	
-                	
-                	
-                	# Initial Bs is Mp + 3. 
-                	bs_i = self.r0_lin + 3
+                    # A1, A2, B, alpha and beta are rounded values from Jorgensen et al. (2019).
+                    # p values to scale magnetopause are from inspection of an example. (1,1,3,4) 
+                    
+                    
+                    
+                    # Initial Bs is Mp + 3. 
+                    bs_i = self.r0_lin + 3
 
-                	# Get initial alpha values for Mp. Bs values are Mp + 0.2. 
-                	bs_alpha_i = self.get_initial_alpha() + 0.2
+                    # Get initial alpha values for Mp. Bs values are Mp + 0.2. 
+                    bs_alpha_i = self.get_initial_alpha() + 0.2
 
-                	
-                	self.params0 = (1, bs_i, 0.000015, 0.000013, 2, 2.5, -1.6, 1, 3, 4, bs_alpha_i, bs_alpha_i)
+                    
+                    self.params0 = (1, bs_i, 0.000015, 0.000013, 2, 2.5, -1.6, 1, 3, 4, bs_alpha_i, bs_alpha_i)
                 
                 elif self.init_method == 2: 
-                	p0 = self.get_initial_p0_method2(self.density)
-                	bs = self.get_initial_bs_method2(self.density)
-                	A1 = self.get_initial_A1_method2(self.density)
-                	A2 = self.get_initial_A2_method2(self.density)
-                	
-                	# Get initial alpha values for Mp. Bs values are Mp + 0.2. 
-                	bs_alpha_i = self.get_initial_alpha() + 0.2
-                	
-                	self.params0 = (p0, bs, A1, A2, 2, 2.5, -1.6, 1, 3, 4, bs_alpha_i, bs_alpha_i)
-                	
+                    p0 = self.get_initial_p0_method2(self.density)
+                    bs = self.get_initial_bs_method2(self.density)
+                    A1 = self.get_initial_A1_method2(self.density)
+                    A2 = self.get_initial_A2_method2(self.density)
+                    
+                    # Get initial alpha values for Mp. Bs values are Mp + 0.2. 
+                    bs_alpha_i = self.get_initial_alpha() + 0.2
+                    
+                    self.params0 = (p0, bs, A1, A2, 2, 2.5, -1.6, 1, 3, 4, bs_alpha_i, bs_alpha_i)
+                    
             else: raise ValueError("{} not a valid model. 'jorg' or 'cmem' only atm.".format(self.current_model))
         
         print ('Initial parameters are: ', self.params0)
@@ -555,7 +555,7 @@ class threed_models():
                 # Set boundaries on some parameters. Default will be not to run this at first. 
                 self.param_bounds = ((None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None))
             else: 
-            	raise ValueError("{} not a valid model. 'jorg' or 'cmem' only atm.".format(self.current_model))
+                raise ValueError("{} not a valid model. 'jorg' or 'cmem' only atm.".format(self.current_model))
           
         else: 
             self.param_bounds=None

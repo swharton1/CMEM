@@ -5,11 +5,11 @@ import os
 # This is a backup to set the environment variables if they haven't been set externally. 
 #This is mostly so I can do testing in ipython3. 
 if "PLOT_PATH" not in os.environ: 
-	os.environ["PLOT_PATH"] = "/home/s/sw682/Code/plots/CMEM_plots/"
+    os.environ["PLOT_PATH"] = "/home/s/sw682/Code/plots/CMEM_plots/"
 if "PICKLE_PATH" not in os.environ:
-	os.environ["PICKLE_PATH"] = "/home/s/sw682/Code/pickled_files/CMEM_pickled_models/" 
+    os.environ["PICKLE_PATH"] = "/home/s/sw682/Code/pickled_files/CMEM_pickled_models/" 
 if "PPMLR_PATH" not in os.environ:
-	os.environ["PPMLR_PATH"] = "/data/sol-ionosphere/SMILE/PPMLR/"
+    os.environ["PPMLR_PATH"] = "/data/sol-ionosphere/SMILE/PPMLR/"
 #os.environ["OPENGGCM_PATH"] = "/Users/sw682/Documents/Local_Code/CMEM/OpenGGCM/" 
 
 from . import read_ppmlr

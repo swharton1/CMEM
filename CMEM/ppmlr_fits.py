@@ -245,7 +245,7 @@ class read_ppmlr_fits():
         xval2 = np.append(r*np.cos(theta2*(np.pi/180)),0)
         yval2 = np.append(r*np.sin(theta2*(np.pi/180)),0)
         verts2 = [[xval2[i],yval2[i]] for i in range(len(xval2))]
-		
+        
         polygon2 = Polygon(verts2, closed=True, edgecolor='navy', facecolor='navy', alpha=1) 
         ax.add_patch(polygon2)        
         

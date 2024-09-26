@@ -129,9 +129,9 @@ class threed_models():
 
         return x,y,z 
 
-	#COST FUNCTIONS
-	###############
-	
+    #COST FUNCTIONS
+    ###############
+    
     def get_cost_function(self):
         '''This returns the cost function that calculates the misfit/n.
         
@@ -159,7 +159,7 @@ class threed_models():
                 # Calculate Model values of eta with 
                 #a given set of parameters.
                 eta_model = self.get_eta_model(params) 
-                	
+                    
                 # Now get the misfit, (model - observed)**2
                 sq_diff = (eta_model - self.eta)**2
                 cost = sq_diff.sum()/self.eta.size
@@ -216,25 +216,25 @@ class threed_models():
             raise ValueError("Invalid cost function chosen. Select either 'sum squares', 'absolute' or 'normalised'.") 
 
     def get_eta_model(self, params):
-    	'''This function calculates the eta model values for each iteration. This function is intended to be run from the cost function. 
-    	Parameters
-    	----------
-    	params - tuple of the model parameters for the chosen model. '''
-		
-    	if self.current_model == "jorg": 
-    		eta_model = self.current_func(self.r, self.theta, self.phi, *params)
-    	elif self.current_model == "cmem":
-    		eta_model = self.current_func(self.r, self.theta, self.phi, *self.lin_coeffs, *params)
-    	else: 
-    		raise ValueError("{} not a valid model. 'jorg' or 'cmem' only atm.".format(self.current_model))
-		
-    	return eta_model
+        '''This function calculates the eta model values for each iteration. This function is intended to be run from the cost function. 
+        Parameters
+        ----------
+        params - tuple of the model parameters for the chosen model. '''
+        
+        if self.current_model == "jorg": 
+            eta_model = self.current_func(self.r, self.theta, self.phi, *params)
+        elif self.current_model == "cmem":
+            eta_model = self.current_func(self.r, self.theta, self.phi, *self.lin_coeffs, *params)
+        else: 
+            raise ValueError("{} not a valid model. 'jorg' or 'cmem' only atm.".format(self.current_model))
+        
+        return eta_model
 
 
-		
-	#FITTING THE MODEL TO THE DATA
-	##############################
-		   
+        
+    #FITTING THE MODEL TO THE DATA
+    ##############################
+           
     def fit_function_with_nelder_mead(self, model = "jorg", params0 = None, set_param_bounds=False, cost_func="normalised", init_method=1):
         '''This uses a Nelder-Mead minimisation technique to find the best 
         parameters for the chosen model to the data. 
@@ -269,33 +269,33 @@ class threed_models():
         self.current_func = bef.get_model_func(self.current_model)
         self.init_method = init_method
 
-		#GET THE INITIAL PARAMETERS (IF NOT GIVEN)
-		##########################################
-		
-		# Get Lin model coefficients. 
+        #GET THE INITIAL PARAMETERS (IF NOT GIVEN)
+        ##########################################
+        
+        # Get Lin model coefficients. 
         if self.current_model == "cmem":
-        	self.lin_coeffs = bef.get_lin_coeffs(self.dipole, self.pdyn, self.pmag, self.bz)
-        	self.r0_lin = self.lin_coeffs[-1] 
-        	
+            self.lin_coeffs = bef.get_lin_coeffs(self.dipole, self.pdyn, self.pmag, self.bz)
+            self.r0_lin = self.lin_coeffs[-1] 
+            
         #Get initial parameters. 
         if params0 is None: 
-        	if self.current_model == "jorg":
-        		
-        		self.params0 = sip.get_init_params(self.current_model, self.init_method, self.bz, self.pdyn, self.density) 
+            if self.current_model == "jorg":
+                
+                self.params0 = sip.get_init_params(self.current_model, self.init_method, self.bz, self.pdyn, self.density) 
         
-        	elif self.current_model == "cmem":
-        		self.params0 = sip.get_init_params(self.current_model, self.init_method, self.bz, self.pdyn, self.density, self.r0_lin) 
-		
-        	else:
-        		raise ValueError("{} not a valid model. Choose 'cmem' or 'jorg'".format(self.current_model))
+            elif self.current_model == "cmem":
+                self.params0 = sip.get_init_params(self.current_model, self.init_method, self.bz, self.pdyn, self.density, self.r0_lin) 
+        
+            else:
+                raise ValueError("{} not a valid model. Choose 'cmem' or 'jorg'".format(self.current_model))
         else:
-        	self.params0 = params0 
-		
+            self.params0 = params0 
+        
        
 
 
-		#SET BOUNDARIES ON PARAMETERS (OPTIONAL - NOT USED)
-		###################################################
+        #SET BOUNDARIES ON PARAMETERS (OPTIONAL - NOT USED)
+        ###################################################
         
         #if set_param_bounds: 
             
@@ -310,13 +310,13 @@ class threed_models():
                 #Default will be not to run this at first. 
         #        self.param_bounds = ((None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None),(None,None))
         #    else: 
-        #    	raise ValueError("{} not a valid model. 'jorg' or 'cmem' only atm.".format(self.current_model))
+        #        raise ValueError("{} not a valid model. 'jorg' or 'cmem' only atm.".format(self.current_model))
           
         #else: 
         #    self.param_bounds=None
 
-		#GET COST FUNCTION AND MINIMISE IT.
-		###################################
+        #GET COST FUNCTION AND MINIMISE IT.
+        ###################################
 
         # Get cost calculation function. 
         self.cost_func = cost_func.lower()

@@ -208,7 +208,7 @@ class compare_models():
 
 
 class parameter_relationships():
-	#This create plots of the variation of four key parameters with solar wind density, as determined from the manually fitted files. 
+    #This create plots of the variation of four key parameters with solar wind density, as determined from the manually fitted files. 
     def __init__(self, model="jorg"):
         self.pickle_path = os.environ.get("PICKLE_PATH")
         self.plot_path = os.environ.get("PLOT_PATH")
@@ -524,8 +524,8 @@ class magnetopause_model():
             
             #Get Earth_sun line data for emissivity data. 
             xp, yp, zp, etad = gm.calculate_sunearth_line(pval['x'], pval['y'], pval['z'], pval['etad'])
-		
-		    #Get Earth_sun line data for emissivity model. 
+        
+            #Get Earth_sun line data for emissivity model. 
             xp, yp, zp, etam = gm.calculate_sunearth_line(pval['x'], pval['y'], pval['z'], pval['etam'])
 
             # Get bowshock parameter too. You will need it. 
@@ -537,7 +537,7 @@ class magnetopause_model():
             pdyn = pval["pdyn"]
             pmag = pval["pmag"]
             #bz = pval["bz"] 
-			
+            
             # Get parameter label information for plotting. 
             if p == 0: 
                 self.param_list = pval["parameter list"]
@@ -573,13 +573,13 @@ class magnetopause_model():
             # Get CMEM magnetopause first. OLD DEFINITION. 
             #xp_index = np.where(etam == etam.max())
             #self.r_cmem_array.append(xp[xp_index])
-			#Get Lin coefficients. 
-			
+            #Get Lin coefficients. 
+            
             lin_coeffs = bef.get_lin_coeffs(0, self.pdyn[p], self.pmag[p], -5.0)
             #Get Lin magnetopause for a range of theta and phi 
             rmp = bef.lin_scaled_func(0, 0, *lin_coeffs, p0=self.params[p][0], p1=self.params[p][7], p2=self.params[p][8], p3=self.params[p][9]) 
             self.r_cmem_array.append(rmp) 
-			
+            
             # Get max Ix second. 
             ix_index = np.where(etad == etad.max())
             self.maxIx_array.append(xp[ix_index])

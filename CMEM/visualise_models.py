@@ -19,9 +19,9 @@ class analyse_model():
         self.filename=filename.split("_")[0]
         self.current_model = filename.split("_")[1]
         if self.current_model == "cmem":
-        	self.image_tag = "CMEM"
+            self.image_tag = "CMEM"
         else:
-        	self.image_tag = self.current_model.capitalize()
+            self.image_tag = self.current_model.capitalize()
 
         # Read in the pickled optimised model. 
         self.model = self.read_pickle(filename, self.current_model)
@@ -350,20 +350,20 @@ class analyse_model():
 
         #Get Earth_sun line data for emissivity data. 
         xp, yp, zp, etad = gm.calculate_sunearth_line(self.model['x'], self.model['y'], self.model['z'], self.model['etad'])
-		
-		#Get Earth_sun line data for emissivity model. 
+        
+        #Get Earth_sun line data for emissivity model. 
         xp, yp, zp, etam = gm.calculate_sunearth_line(self.model['x'], self.model['y'], self.model['z'], self.model['etam'])
         
 
         # Separate the model line into three colours for the different model sections. 
         if self.current_model == "jorg":
-        	i_msphere = np.where(xp <= self.model['params best nm'][0])
-        	i_msheath = np.where((xp > self.model['params best nm'][0]) & (xp <= self.model['params best nm'][1]))
-        	i_bow = np.where(xp > self.model['params best nm'][1])
+            i_msphere = np.where(xp <= self.model['params best nm'][0])
+            i_msheath = np.where((xp > self.model['params best nm'][0]) & (xp <= self.model['params best nm'][1]))
+            i_bow = np.where(xp > self.model['params best nm'][1])
         elif self.current_model == "cmem":
-        	i_msphere = np.where(xp <= self.model['params best nm'][0]*self.model['r0lin'])
-        	i_msheath = np.where((xp > self.model['params best nm'][0]*self.model['r0lin']) & (xp <= self.model['params best nm'][1]))
-        	i_bow = np.where(xp > self.model['params best nm'][1])
+            i_msphere = np.where(xp <= self.model['params best nm'][0]*self.model['r0lin'])
+            i_msheath = np.where((xp > self.model['params best nm'][0]*self.model['r0lin']) & (xp <= self.model['params best nm'][1]))
+            i_bow = np.where(xp > self.model['params best nm'][1])
 
         
 
@@ -414,7 +414,7 @@ class analyse_model():
         xval2 = np.append(r*np.cos(theta2*(np.pi/180)),0)
         yval2 = np.append(r*np.sin(theta2*(np.pi/180)),0)
         verts2 = [[xval2[i],yval2[i]] for i in range(len(xval2))]
-		
+        
         polygon2 = Polygon(verts2, closed=True, edgecolor='navy', facecolor='navy', alpha=1) 
         ax.add_patch(polygon2)
 
