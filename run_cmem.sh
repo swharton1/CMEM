@@ -27,7 +27,7 @@ export PICKLE_PATH="$HOME/Code/pickled_files/CMEM_pickled_models/"
 export PPMLR_PATH="/data/sol-ionosphere/SMILE/PPMLR/"
 
 #These are the arguments for the read_ppmlr file. 
-filename="S05D12.25V400B0000-05rad.dat"
+filename="S05D12.25V400B0000-05rad.fits"
 xmin=-5
 xmax=25
 ymin=-25

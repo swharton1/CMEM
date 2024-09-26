@@ -33,7 +33,7 @@ if not os.path.isdir(PICKLE_PATH):
 
 
 #Set arguments here. These may come from IDL or Shell so can be commented out when needed. 
-#filename="S05D05V400B0000-05rad.dat"
+#filename="S05D05V400B0000-05rad.fits"
 #xmin=-5
 #xmax=25
 #ymin=-25
@@ -55,7 +55,7 @@ params0=None
 #This will read in the PPMLR emissivity cube. 
 print ("Filename is: ", filename) 
 print ("Get PPMLR data") 
-#ppmlr = CMEM.read_ppmlr.read_ppmlr_cube(filename=filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
+#ppmlr = CMEM.read_fits.read_ppmlr_fits(filename=filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
 #print ("Density = ", ppmlr.density) 
 
 #PLOTTING THE PPMLR DATA CUBES.

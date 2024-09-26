@@ -17,7 +17,7 @@ setenv, 'PLOT_PATH='+HOME+'/Code/plots/CMEM_plots/'
 setenv, 'PICKLE_PATH='+HOME+'/Code/pickled_files/CMEM_pickled_models/' 
 
 ;These are the arguments for the read_ppmlr file. 
-filename="S05D12.25V400B0000-05rad.dat"
+filename="S05D12.25V400B0000-05rad.fits"
 xmin=-5
 xmax=25
 ymin=-25
