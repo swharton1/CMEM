@@ -7,7 +7,8 @@ import os
 # This function will compare ppmlr files with a 
 # jorgensen model with stated parameters visually. 
 try: 
-    from . import read_ppmlr
+    #from . import read_ppmlr
+    from . import ppmlr_fits
     from . import get_names_and_units as gnau 
     from . import get_meridians as gm 
     
@@ -22,7 +23,7 @@ class compare_data_model():
     parameters and plot them side by side to visually compare them. 
     '''
 
-    def __init__(self, filename="S05D05V400B0000-05rad.dat", ppmlr=None, params0 = None, \
+    def __init__(self, filename="S05D05V400B0000-05rad.fits", ppmlr=None, params0 = None, \
                  xmin=None, xmax=None, ymin=None, ymax=None, zmin=None, zmax=None, model="jorg"):
 
         # Read in the data from the simulation file. 
@@ -30,7 +31,8 @@ class compare_data_model():
             ts = process_time()
             print ("Reading ppmlr data:")
             self.filename=filename
-            ppmlr = read_ppmlr.read_ppmlr_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
+            #ppmlr = read_ppmlr.read_ppmlr_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
+            ppmlr = ppmlr_fits.read_ppmlr_fits(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
             #ppmlr.reshape_to_3D()
             #ppmlr.apply_limit(c)
             te = process_time()

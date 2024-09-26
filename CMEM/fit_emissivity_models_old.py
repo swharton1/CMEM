@@ -13,7 +13,8 @@ import os
 #the code transfer! 
 
 try: 
-    from . import read_ppmlr
+    #from . import read_ppmlr
+    from . import ppmlr_fits
 except(ImportError):
     print ("Are you working from the right directory? ")
     print ("If the interactive window is run from the wrong directory, it won't work. ")
@@ -27,7 +28,7 @@ class threed_models():
     # This class can fit either the Jorgensen or CMEM model with a Nelder-Mead minimisation routine.  
     # It can also switch between three different cost functions. 
 
-    def __init__(self, filename="S05D05V400B0000-05rad.dat", ppmlr=None, \
+    def __init__(self, filename="S05D05V400B0000-05rad.fits", ppmlr=None, \
                   xmin=None, xmax=None, ymin=None, ymax=None, zmin=None, zmax=None):
         # This can take arrays of data into the function so real data 
         # can be modelled. Default is it's blank so test data will be used. 
@@ -37,7 +38,8 @@ class threed_models():
             self.filename = filename
             ts = process_time()
             print ("Reading ppmlr data:")
-            ppmlr = read_ppmlr.read_ppmlr_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
+            #ppmlr = read_ppmlr.read_ppmlr_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
+            ppmlr = ppmlr_fits.read_ppmlr_fits(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
             te = process_time()
             print ("Time = {:.1f}s".format(te-ts))
 
