@@ -305,7 +305,7 @@ class threed_models():
         self.eta_model = self.get_eta_model(self.params_best_nm) 
   
 
-    def write_pickle(self, savetag=""):
+    def write_pickle(self, fname=None, savetag=""):
         '''This will create a pickle file of all the information that would be needed for plotting.
         This is to save an object already created. 
         
@@ -315,7 +315,8 @@ class threed_models():
         # Name and locate the pickle file. 
         pickle_path = os.environ.get("PICKLE_PATH")
         
-        fname = self.filename+"_{}_{}_im{}_{}.pkl".format(self.current_model, self.cost_func, self.init_method, savetag)
+        if fname is None:
+            fname = self.filename+"_{}_{}_im{}_{}.pkl".format(self.current_model, self.cost_func, self.init_method, savetag)
 
         # Add all the desired information to a dictionary. 
         pickle_dict = {

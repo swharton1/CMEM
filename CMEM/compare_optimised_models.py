@@ -19,10 +19,10 @@ class compare_models():
             pickle_dict = pickle.load(f)
         return pickle_dict
     
-    def compare_cost_between_models(self, save=True, savetag="", set_A1A2=False, add_bad_fits=False):
+    def compare_cost_between_models(self, save=True, savetag="", init_method=1, add_bad_fits=False):
 
         # List the filenames of the optimised models you want to compare. 
-        if set_A1A2:
+        if init_method == 2:
             filenames_jorg = ["S05D05V400B0000-05rad.dat_jorg_normalised_A1A2.pkl",
                           "S05D7.5V400B0000-05rad.dat_jorg_normalised_A1A2.pkl",
                           "S05D12.25V400B0000-05rad.dat_jorg_normalised_A1A2.pkl",
@@ -30,12 +30,12 @@ class compare_models():
                           "S05D25V400B0000-05rad.dat_jorg_normalised_A1A2.pkl",
                           "S05D35V400B0000-05rad.dat_jorg_normalised_A1A2.pkl",] 
         
-            filenames_cmem = ["S05D05V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D7.5V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D12.25V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D20V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D25V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D35V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",] 
+            filenames_cmem = ["S05D05V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D7.5V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D12.25V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D20V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D25V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D35V400B0000-05rad.fits_cmem_normalised_im2_.pkl",] 
         else:
 
             filenames_jorg = ["S05D05V400B0000-05rad.dat_jorg_normalised.pkl",
@@ -45,12 +45,12 @@ class compare_models():
                           "S05D25V400B0000-05rad.dat_jorg_normalised.pkl",
                           "S05D35V400B0000-05rad.dat_jorg_normalised.pkl",] 
         
-            filenames_cmem = ["S05D05V400B0000-05rad.dat_cmem_normalised.pkl",
-                          "S05D7.5V400B0000-05rad.dat_cmem_normalised.pkl",
-                          "S05D12.25V400B0000-05rad.dat_cmem_normalised.pkl",
-                          "S05D20V400B0000-05rad.dat_cmem_normalised.pkl",
-                          "S05D25V400B0000-05rad.dat_cmem_normalised.pkl",
-                          "S05D35V400B0000-05rad.dat_cmem_normalised.pkl",] 
+            filenames_cmem = ["S05D05V400B0000-05rad.fits_cmem_normalised_im1_.pkl",
+                          "S05D7.5V400B0000-05rad.fits_cmem_normalised_im1_.pkl",
+                          "S05D12.25V400B0000-05rad.fits_cmem_normalised_im1_.pkl",
+                          "S05D20V400B0000-05rad.fits_cmem_normalised_im1_.pkl",
+                          "S05D25V400B0000-05rad.fits_cmem_normalised_im1_.pkl",
+                          "S05D35V400B0000-05rad.fits_cmem_normalised_im1_.pkl",] 
         
         # Read these files. 
         pickle_dict_jorg = []
@@ -71,7 +71,7 @@ class compare_models():
         cost_cmem = np.array([p["min cost"] for p in pickle_dict_cmem])
 
         # Sort title and linestyle out. 
-        if set_A1A2:
+        if init_method == 2:
             title = "Variation of Cost with Solar Wind Density: Method 2"
             ls = "dashed"
            
@@ -96,7 +96,7 @@ class compare_models():
         if add_bad_fits:
             ax.plot(density_jorg[0], cost_jorg[0], marker='x', c='k', zorder=3)
             ax.plot(density_cmem[0], cost_cmem[0], marker='x', c='k', zorder=3)
-            ax.plot(density_cmem[1], cost_cmem[1], marker='x', c='k', zorder=3)
+            #ax.plot(density_cmem[1], cost_cmem[1], marker='x', c='k', zorder=3)
 
         if save:
             fig.savefig(self.plot_path+"cost_comparison{}.png".format(savetag))
@@ -114,12 +114,12 @@ class compare_models():
                           "S05D25V400B0000-05rad.dat_jorg_normalised_A1A2.pkl",
                           "S05D35V400B0000-05rad.dat_jorg_normalised_A1A2.pkl",] 
         
-        filenames_cmem_A1A2 = ["S05D05V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D7.5V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D12.25V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D20V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D25V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D35V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",] 
+        filenames_cmem_A1A2 = ["S05D05V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D7.5V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D12.25V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D20V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D25V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D35V400B0000-05rad.fits_cmem_normalised_im2_.pkl",] 
         
 
         filenames_jorg = ["S05D05V400B0000-05rad.dat_jorg_normalised.pkl",
@@ -129,12 +129,12 @@ class compare_models():
                           "S05D25V400B0000-05rad.dat_jorg_normalised.pkl",
                           "S05D35V400B0000-05rad.dat_jorg_normalised.pkl",] 
         
-        filenames_cmem = ["S05D05V400B0000-05rad.dat_cmem_normalised.pkl",
-                          "S05D7.5V400B0000-05rad.dat_cmem_normalised.pkl",
-                          "S05D12.25V400B0000-05rad.dat_cmem_normalised.pkl",
-                          "S05D20V400B0000-05rad.dat_cmem_normalised.pkl",
-                          "S05D25V400B0000-05rad.dat_cmem_normalised.pkl",
-                          "S05D35V400B0000-05rad.dat_cmem_normalised.pkl",] 
+        filenames_cmem = ["S05D05V400B0000-05rad.fits_cmem_normalised_im1_.pkl",
+                          "S05D7.5V400B0000-05rad.fits_cmem_normalised_im1_.pkl",
+                          "S05D12.25V400B0000-05rad.fits_cmem_normalised_im1_.pkl",
+                          "S05D20V400B0000-05rad.fits_cmem_normalised_im1_.pkl",
+                          "S05D25V400B0000-05rad.fits_cmem_normalised_im1_.pkl",
+                          "S05D35V400B0000-05rad.fits_cmem_normalised_im1_.pkl",] 
         
         # Read these files. 
         pickle_dict_jorg_A1A2 = []
@@ -196,7 +196,7 @@ class compare_models():
         if add_bad_fits:
             ax.plot(density_jorg[0], cost_jorg[0], marker='x', c='k', zorder=3)
             ax.plot(density_cmem[0], cost_cmem[0], marker='x', c='k', zorder=3)
-            ax.plot(density_cmem[1], cost_cmem[1], marker='x', c='k', zorder=3)
+            #ax.plot(density_cmem[1], cost_cmem[1], marker='x', c='k', zorder=3)
 
         if save:
             fig.savefig(self.plot_path+"cost_comparison_both{}.png".format(savetag))
@@ -347,12 +347,12 @@ class optimal_parameter_relationships():
         It is just set up for the CMEM model at the moment. '''
 
          # List the filenames of the optimised models you want to compare. 
-        filenames = ["S05D05V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D7.5V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D12.25V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D20V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D25V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D35V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",] 
+        filenames = ["S05D05V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D7.5V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D12.25V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D20V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D25V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D35V400B0000-05rad.fits_cmem_normalised_im2_.pkl",] 
   
         # Read these files. 
         pickle_dict = []
@@ -481,6 +481,11 @@ class magnetopause_model():
         self.pickle_path = os.environ.get("PICKLE_PATH")
         self.plot_path = os.environ.get("PLOT_PATH")
 
+        #Get the names of the variables and units for plotting. 
+        info = gnau.get_parameter_info(model='cmem')
+        self.parameter_names = [info[i][0] for i in info.keys()]
+        self.parameter_units = [info[i][1] for i in info.keys()]
+        
         self.get_pickle_files()
         self.get_earth_sun_line_data()
         self.get_magnetopause_positions()
@@ -494,12 +499,12 @@ class magnetopause_model():
     def get_pickle_files(self):
         '''This will read in the relevant pickle file for each simulation from the CMEM model. '''
 
-        self.filenames = ["S05D05V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D7.5V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D12.25V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D20V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D25V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",
-                          "S05D35V400B0000-05rad.dat_cmem_normalised_A1A2.pkl",] 
+        self.filenames = ["S05D05V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D7.5V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D12.25V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D20V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D25V400B0000-05rad.fits_cmem_normalised_im2_.pkl",
+                          "S05D35V400B0000-05rad.fits_cmem_normalised_im2_.pkl",] 
 
         # Read these files. 
         self.pickle_dict = []
@@ -539,9 +544,9 @@ class magnetopause_model():
             #bz = pval["bz"] 
             
             # Get parameter label information for plotting. 
-            if p == 0: 
-                self.param_list = pval["parameter list"]
-                self.param_unit = pval["parameter unit list"]
+            #if p == 0: 
+            #    self.param_list = pval["parameter list"]
+            #    self.param_unit = pval["parameter unit list"]
 
             self.xp_array.append(xp)
             self.etam_array.append(etam)
@@ -647,30 +652,16 @@ class magnetopause_model():
         ax.set_xlim(xlim)
 
         label = ""
-        info = gnau.get_parameter_info(model='cmem')
-        parameter_names = [info[i][0] for i in info.keys()]
-        parameter_units = [info[i][1] for i in info.keys()]
+        #info = gnau.get_parameter_info(model='cmem')
+        #parameter_names = [info[i][0] for i in info.keys()]
+        #parameter_units = [info[i][1] for i in info.keys()]
         for p,pval in enumerate(self.params[sim]):
                 pv = pval 
-                label += "{}={} {}, ".format(parameter_names[p], self.sig_figs(pv,3), parameter_units[p])
-                if len(parameter_names)//2 == p+1:
+                label += "{}={} {}, ".format(self.parameter_names[p], self.sig_figs(pv,3), self.parameter_units[p])
+                if len(self.parameter_names)//2 == p+1:
                     label += "\n"
                     
-        # Add a label to show the model parameters. 
-        #label = ""
-        #for p,pval in enumerate(self.params[sim]):
-                
-        #    param = self.param_list[p] if p > 0 else r"$p_0$"
-            # unit = self.param_unit[p] if p > 0 else ""
-            # Correct label for A1, A2 and B. Urgh! 
-        #    if (p < 2) or (p > 3):
-        #        punit = self.param_unit[p]
-        #    else:
-        #        punit = "eV cm"+r"$^{-3}$"+" s"+r"$^{-1}$"
 
-        #    label += "{}={} {}, ".format(param, self.sig_figs(pval,3), punit)
-        #    if len(self.param_list)//2 == p+2:
-        #        label += "\n"
 
         fig.text(0.5, 0.02, label, ha='center')
 
@@ -717,9 +708,9 @@ class magnetopause_model():
 
         # Calculate mean differences. 
         self.mean_r = np.mean(self.r_cmem_array-self.r_cmem_array)
-        self.mean_maxIx = np.mean(self.maxIx_array[:,0][1:]-self.r_cmem_array[1:])
-        self.mean_maxdIx = np.mean(self.maxdIx_array[:,0][1:]-self.r_cmem_array[1:])
-        self.mean_f = np.mean(self.f_array[:,0][1:]-self.r_cmem_array[1:])
+        self.mean_maxIx = np.mean(self.maxIx_array[:,0]-self.r_cmem_array)
+        self.mean_maxdIx = np.mean(self.maxdIx_array[:,0]-self.r_cmem_array)
+        self.mean_f = np.mean(self.f_array[:,0]-self.r_cmem_array)
 
         ax2.plot(self.density, self.r_cmem_array-self.r_cmem_array, c='r', linestyle="dotted", marker='x', label="Mean = {:.3f}".format(self.mean_r)+r"$R_E$")
         ax2.plot(self.density, self.maxIx_array[:,0]-self.r_cmem_array, c='k', linestyle="dotted", marker='^', label="Mean = {:.3f}".format(self.mean_maxIx)+r"$R_E$")

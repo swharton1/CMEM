@@ -27,7 +27,7 @@ export PICKLE_PATH="$HOME/Code/pickled_files/CMEM_pickled_models/"
 export PPMLR_PATH="/data/sol-ionosphere/SMILE/PPMLR/"
 
 #These are the arguments for the read_ppmlr file. 
-filename="S05D05V400B0000-05rad.fits"
+filename="S05D35V400B0000-05rad.fits"
 xmin=-5
 xmax=25
 ymin=-25
@@ -43,7 +43,7 @@ model=cmem
 cost_func=normalised
 
 #This is the method you want to use from the CMEM paper to initialise the starting parameters. 
-init_method=1
+init_method=2
 
 #This is the name of a pickled model file you would read if you wanted to plot the fitted output. 
 pickled_file=$filename'_'$model'_'$cost_func'_'$init_method'.pkl'

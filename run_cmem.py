@@ -89,7 +89,7 @@ fit_model = CMEM.fit_emissivity_models.threed_models(filename=filename, ppmlr=pp
 fit_model.fit_function_with_nelder_mead(model=model, params0=params0, set_param_bounds=False, cost_func=cost_func, init_method=init_method)
 
 #Save the model output to a pickle file. 
-fit_model.write_pickle(savetag="") 
+fit_model.write_pickle(fname=pickle_file, savetag="") 
 
 #PLOT THE OUTPUT OF FITTING A MODEL TO THE PPMLR DATA CUBES. 
 ############################################################

@@ -18,6 +18,7 @@ class analyse_model():
         self.plot_path = os.environ.get("PLOT_PATH")
         self.filename=filename.split("_")[0]
         self.current_model = filename.split("_")[1]
+        
         if self.current_model == "cmem":
             self.image_tag = "CMEM"
         else:
@@ -26,6 +27,10 @@ class analyse_model():
         # Read in the pickled optimised model. 
         self.model = self.read_pickle(filename, self.current_model)
         
+        #Get the names of the variables and units for plotting. 
+        info = gnau.get_parameter_info(model=self.model['model'])
+        self.parameter_names = [info[i][0] for i in info.keys()]
+        self.parameter_units = [info[i][1] for i in info.keys()]
 
     def __repr__(self):
         return f"analyse model object."
@@ -43,7 +48,7 @@ class analyse_model():
 
         fig = plt.figure(figsize=(8,8))
         fig.subplots_adjust(hspace=0.4, wspace=0.4, top=0.85)
-        fig.text(0.5, 0.92, "Parameter variation with optimisation\n{}\nOptimisation Time = {:.1f}s\nModel = {}".format(self.filename, self.model['opt time'], self.image_tag.capitalize()), ha="center")
+        fig.text(0.5, 0.92, "Parameter variation with optimisation\n{}\nOptimisation Time = {:.1f}s\nModel = {}".format(self.filename, self.model['opt time'], self.image_tag), ha="center")
         ax1 = fig.add_subplot(321)
         ax2 = fig.add_subplot(322)
         ax2b = ax2.twinx()
@@ -53,32 +58,32 @@ class analyse_model():
         ax6 = fig.add_subplot(326)
         
         if self.model['model'] == "jorg":
-            ax1.text(0.05, 1.05, self.model["parameter list"][0], c="r", transform=ax1.transAxes, fontsize=12)
-            ax1.text(0.25, 1.05, self.model["parameter list"][1], c="b", transform=ax1.transAxes, fontsize=12)
-            ax2.text(0.05, 1.05, self.model["parameter list"][2], c="r", transform=ax2.transAxes, fontsize=12)
-            ax2.text(0.25, 1.05, self.model["parameter list"][3], c="b", transform=ax2.transAxes, fontsize=12)
-            ax2.text(0.45, 1.05, self.model["parameter list"][4], c="g", transform=ax2.transAxes, fontsize=12)
-            ax3.text(0.05, 1.05, self.model["parameter list"][5], c="r", transform=ax3.transAxes, fontsize=12)
-            ax3.text(0.25, 1.05, self.model["parameter list"][6], c="b", transform=ax3.transAxes, fontsize=12)
-            ax4.text(0.05, 1.05, self.model["parameter list"][7], c="r", transform=ax4.transAxes, fontsize=12)
-            ax4.text(0.25, 1.05, self.model["parameter list"][8], c="b", transform=ax4.transAxes, fontsize=12)
-            ax5.text(0.05, 1.05, self.model["parameter list"][9], c="r", transform=ax5.transAxes, fontsize=12)
-            ax5.text(0.25, 1.05, self.model["parameter list"][10], c="b", transform=ax5.transAxes, fontsize=12)
+            ax1.text(0.05, 1.05, self.parameter_names[0], c="r", transform=ax1.transAxes, fontsize=12)
+            ax1.text(0.25, 1.05, self.parameter_names[1], c="b", transform=ax1.transAxes, fontsize=12)
+            ax2.text(0.05, 1.05, self.parameter_names[2], c="r", transform=ax2.transAxes, fontsize=12)
+            ax2.text(0.25, 1.05, self.parameter_names[3], c="b", transform=ax2.transAxes, fontsize=12)
+            ax2.text(0.45, 1.05, self.parameter_names[4], c="g", transform=ax2.transAxes, fontsize=12)
+            ax3.text(0.05, 1.05, self.parameter_names[5], c="r", transform=ax3.transAxes, fontsize=12)
+            ax3.text(0.25, 1.05, self.parameter_names[6], c="b", transform=ax3.transAxes, fontsize=12)
+            ax4.text(0.05, 1.05, self.parameter_names[7], c="r", transform=ax4.transAxes, fontsize=12)
+            ax4.text(0.25, 1.05, self.parameter_names[8], c="b", transform=ax4.transAxes, fontsize=12)
+            ax5.text(0.05, 1.05, self.parameter_names[9], c="r", transform=ax5.transAxes, fontsize=12)
+            ax5.text(0.25, 1.05, self.parameter_names[10], c="b", transform=ax5.transAxes, fontsize=12)
            
             
         elif self.model['model'] == "cmem":
-            ax1.text(0.05, 1.05, self.model["parameter list"][0], c="r", transform=ax1.transAxes, fontsize=12)
-            ax1.text(0.25, 1.05, self.model["parameter list"][1], c="b", transform=ax1.transAxes, fontsize=12)
-            ax2.text(0.05, 1.05, self.model["parameter list"][2], c="r", transform=ax2.transAxes, fontsize=12)
-            ax2.text(0.25, 1.05, self.model["parameter list"][3], c="b", transform=ax2.transAxes, fontsize=12)
-            ax2.text(0.85, 1.05, self.model["parameter list"][4], c="g", transform=ax2.transAxes, fontsize=12)
-            ax3.text(0.05, 1.05, self.model["parameter list"][5], c="r", transform=ax3.transAxes, fontsize=12)
-            ax3.text(0.25, 1.05, self.model["parameter list"][6], c="b", transform=ax3.transAxes, fontsize=12)
-            ax4.text(0.05, 1.05, self.model["parameter list"][7], c="r", transform=ax4.transAxes, fontsize=12)
-            ax4.text(0.25, 1.05, self.model["parameter list"][8], c="b", transform=ax4.transAxes, fontsize=12)
-            ax4.text(0.45, 1.05, self.model["parameter list"][9], c="g", transform=ax4.transAxes, fontsize=12)
-            ax5.text(0.05, 1.05, self.model["parameter list"][10], c="r", transform=ax5.transAxes, fontsize=12)
-            ax5.text(0.25, 1.05, self.model["parameter list"][11], c="b", transform=ax5.transAxes, fontsize=12)
+            ax1.text(0.05, 1.05, self.parameter_names[0]+r"$r_0$", c="r", transform=ax1.transAxes, fontsize=12)
+            ax1.text(0.25, 1.05, self.parameter_names[1], c="b", transform=ax1.transAxes, fontsize=12)
+            ax2.text(0.05, 1.05, self.parameter_names[2], c="r", transform=ax2.transAxes, fontsize=12)
+            ax2.text(0.25, 1.05, self.parameter_names[3], c="b", transform=ax2.transAxes, fontsize=12)
+            ax2.text(0.85, 1.05, self.parameter_names[4], c="g", transform=ax2.transAxes, fontsize=12)
+            ax3.text(0.05, 1.05, self.parameter_names[5], c="r", transform=ax3.transAxes, fontsize=12)
+            ax3.text(0.25, 1.05, self.parameter_names[6], c="b", transform=ax3.transAxes, fontsize=12)
+            ax4.text(0.05, 1.05, self.parameter_names[7], c="r", transform=ax4.transAxes, fontsize=12)
+            ax4.text(0.25, 1.05, self.parameter_names[8], c="b", transform=ax4.transAxes, fontsize=12)
+            ax4.text(0.45, 1.05, self.parameter_names[9], c="g", transform=ax4.transAxes, fontsize=12)
+            ax5.text(0.05, 1.05, self.parameter_names[10], c="r", transform=ax5.transAxes, fontsize=12)
+            ax5.text(0.25, 1.05, self.parameter_names[11], c="b", transform=ax5.transAxes, fontsize=12)
         
         # Sort cost axis and values. 
         if self.model['cost func'] == "sum squares":
@@ -132,7 +137,7 @@ class analyse_model():
             ax5.plot(iteration, param_list_t[10], "b")
             ax6.plot(iteration, cpi, "k", label="Cost")
         elif self.model['model'] == "cmem":
-            ax1.plot(iteration, param_list_t[0]*self.model['r0_lin'], "r")
+            ax1.plot(iteration, param_list_t[0]*self.model['r0lin'], "r")
             ax1.plot(iteration, param_list_t[1], "b")
             ax2.plot(iteration, param_list_t[2]*100000, "r")
             ax2.plot(iteration, param_list_t[3]*100000, "b")
@@ -169,7 +174,7 @@ class analyse_model():
         
         if save: 
             
-            fig.savefig(self.plot_path+"{}/{}_{}_model_parameter_changes_{}{}.png".format(self.current_model,self.filename, self.current_model, self.model['cost func'], savetag))
+            fig.savefig(self.plot_path+"{}/{}_{}_model_parameter_changes_{}_im{}.png".format(self.current_model,self.filename, self.current_model, self.model['cost func'], self.model['init method']))
 
         self.fig_param = fig 
 
@@ -191,27 +196,6 @@ class analyse_model():
         #Get meridian data for etam. 
         xp_y, yp_y, zp_y, etam_y, xp_z, yp_z, zp_z, etam_z = gm.calculate_meridian_planes(self.model['x'], self.model['y'], self.model['z'], self.model['etam'])
         
-        # For the slice with constant y. 
-        #y_uniq = abs(self.model['y'][0,:,0])
-        #i_y = np.where(y_uniq == min(y_uniq))[0][0]
-        # i_y = self.model.n[1]//2
-        #xp_y = self.model['x'][:,i_y]
-        #yp_y = self.model['y'][:,i_y]
-        #zp_y = self.model['z'][:,i_y]
-        #etad_y = self.model['etad'][:,i_y]
-        #etam_y = self.model['etam'][:,i_y]
-        #plane_value_y = self.model['y'][0,i_y,0]
-
-        # For the slice with constant z. 
-        #z_uniq = abs(self.model['z'][:,0,0])
-        #i_z = np.where(z_uniq == min(z_uniq))[0][0]
-        # i_z = self.model.n[2]//2
-        #xp_z = self.model['x'][i_z]
-        #yp_z = self.model['y'][i_z]
-        #zp_z = self.model['z'][i_z]
-        #etad_z = self.model['etad'][i_z]
-        #etam_z = self.model['etam'][i_z]
-        #plane_value_z = self.model['z'][i_z,0,0]
         
         # Calculate log10 eta values. If eta = 0, set log(eta) = vmin  
         letad_y = np.zeros(etad_y.shape)+vmin
@@ -339,7 +323,7 @@ class analyse_model():
 
         if save: 
             
-            fig.savefig(self.plot_path+"{}/{}_data_{}_model_planes_opt{}.png".format(self.current_model,self.filename, self.current_model, savetag))
+            fig.savefig(self.plot_path+"{}/{}_data_{}_model_planes_opt_im{}.png".format(self.current_model,self.filename, self.current_model, self.model['init method']))
            
         self.fig = fig 
 
@@ -397,7 +381,7 @@ class analyse_model():
 
         if save: 
             
-            fig.savefig(self.plot_path+"{}/{}_data_{}_model_sunearth_opt{}.png".format(self.current_model,self.filename, self.current_model, savetag))
+            fig.savefig(self.plot_path+"{}/{}_data_{}_model_sunearth_opt_im{}.png".format(self.current_model,self.filename, self.current_model, self.model['init method']))
            
 
 
