@@ -1,4 +1,4 @@
-g#THIS WILL CONTAINS FUNCTIONS TO CONVERT BETWEEN COORDINATE SYSTEMS. 
+#THIS WILL CONTAINS FUNCTIONS TO CONVERT BETWEEN COORDINATE SYSTEMS. 
 import numpy as np
 #Cartesian-SHUE coordinates. 
 
@@ -47,8 +47,6 @@ def convert_shue_to_xyz_coords(r, theta, phi):
     z = r*np.sin(theta)*np.sin(phi)
 
     return x,y,z 
-
-#Cartesian-Aberrated coordinates. 
 
 
 
