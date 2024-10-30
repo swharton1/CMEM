@@ -11,6 +11,7 @@ try:
     from . import ppmlr_fits
     from . import get_names_and_units as gnau 
     from . import get_meridians as gm 
+    from . import coord_conv as cconv 
     
 except(ImportError):
     print ("Are you working from the right directory? ")
@@ -58,7 +59,7 @@ class compare_data_model():
         # Convert to Shue cooords. to calculate the function. 
         print ("Calculating shue coordinates:")
         ts = process_time()
-        self.r, self.theta, self.phi = self.convert_xyz_to_shue_coords(self.x, self.y, self.z)
+        self.r, self.theta, self.phi = cconv.convert_xyz_to_shue_coords(self.x, self.y, self.z)
         te = process_time()
         print ("Calculated shue coordinates: {:.1f}s".format(te-ts)) 
 
@@ -120,33 +121,33 @@ class compare_data_model():
         new_params = (p0, bs, A1, A2, *self.params0[4:])
         self.params0 = new_params 
             
-    def convert_xyz_to_shue_coords(self, x, y, z):
-        '''This will convert the x,y,z coordinates to those used in the Shue model 
-         of the magnetopause and bowshock. 
+#    def convert_xyz_to_shue_coords(self, x, y, z):
+#        '''This will convert the x,y,z coordinates to those used in the Shue model 
+#         of the magnetopause and bowshock. 
 
-        Parameters
-        ----------
-        x, y, z - now 3D.  
+#        Parameters
+#        ----------
+#        x, y, z - now 3D.  
 
-        Returns
-        -------
-        r, theta (rad) and phi (rad)
-        '''
+#        Returns
+#        -------
+#        r, theta (rad) and phi (rad)
+#        '''
 
-        # r 
-        r = (x**2 + y**2 + z**2)**0.5
+#        # r 
+#        r = (x**2 + y**2 + z**2)**0.5
         
-        # theta - only calc. where coordinate singularities won't occur. 
-        theta = np.zeros(r.shape)
-        i = np.where(r != 0)
-        theta[i] =  np.arccos(x[i]/r[i])
+#        # theta - only calc. where coordinate singularities won't occur. 
+#        theta = np.zeros(r.shape)
+#        i = np.where(r != 0)
+#        theta[i] =  np.arccos(x[i]/r[i])
 
         # phi - only calc. where coordinate singularities won't occur. 
-        phi = np.zeros(r.shape)
-        j = np.where((y**2 + z**2) != 0)
-        phi[j] = np.arccos(y[j]/((y[j]**2 + z[j]**2)**0.5))
+#        phi = np.zeros(r.shape)
+#        j = np.where((y**2 + z**2) != 0)
+#        phi[j] = np.arccos(y[j]/((y[j]**2 + z[j]**2)**0.5))
         
-        return r, theta, phi
+#        return r, theta, phi
     
     def shue_func(self, theta, phi, r0, ay, az):
         '''This is the 3D Shue model defined in Jorgensen et al. (2019)

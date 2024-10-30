@@ -12,6 +12,7 @@ try:
     from . import ppmlr_fits
     from . import boundary_emissivity_functions as bef
     from . import set_initial_params as sip 
+    from . import coord_conv as cconv 
     
 except(ImportError):
     print ("Are you working from the right directory? ")
@@ -69,7 +70,7 @@ class threed_models():
         # Convert to Shue cooords. to calculate the function. 
         print ("Calculating shue coordinates:")
         ts = process_time()
-        self.r, self.theta, self.phi = self.convert_xyz_to_shue_coords(self.x, self.y, self.z)
+        self.r, self.theta, self.phi = cconv.convert_xyz_to_shue_coords(self.x, self.y, self.z)
         te = process_time()
         print ("Time = {:.1f}s".format(te-ts))   
         
@@ -83,51 +84,51 @@ class threed_models():
     #COORDINATE FUNCTIONS FOR THE DATA. 
     ###################################
     
-    def convert_xyz_to_shue_coords(self, x, y, z):
-        '''This will convert the x,y,z coordinates to those used in the Shue model 
-         of the magnetopause and bowshock. 
+#    def convert_xyz_to_shue_coords(self, x, y, z):
+#        '''This will convert the x,y,z coordinates to those used in the Shue model 
+#         of the magnetopause and bowshock. 
 
-        Parameters
-        ----------
-        x, y, z - now 3D.  
+#        Parameters
+#        ----------
+#        x, y, z - now 3D.  
 
-        Returns
-        -------
-        r, theta (rad) and phi (rad)
-        '''
+#        Returns
+#        -------
+#        r, theta (rad) and phi (rad)
+#        '''
 
-        # r 
-        r = (x**2 + y**2 + z**2)**0.5
+#        # r 
+#        r = (x**2 + y**2 + z**2)**0.5
         
-        # theta - only calc. where coordinate singularities won't occur. 
-        theta = np.zeros(r.shape)
-        i = np.where(r != 0)
-        theta[i] =  np.arccos(x[i]/r[i])
+#        # theta - only calc. where coordinate singularities won't occur. 
+#        theta = np.zeros(r.shape)
+#        i = np.where(r != 0)
+#        theta[i] =  np.arccos(x[i]/r[i])
 
         # phi - only calc. where coordinate singularities won't occur. 
-        phi = np.zeros(r.shape)
-        j = np.where((y**2 + z**2) != 0)
-        phi[j] = np.arccos(y[j]/((y[j]**2 + z[j]**2)**0.5))
+#        phi = np.zeros(r.shape)
+#        j = np.where((y**2 + z**2) != 0)
+#        phi[j] = np.arccos(y[j]/((y[j]**2 + z[j]**2)**0.5))
         
-        return r, theta, phi
+#        return r, theta, phi
         
-    def convert_shue_to_xyz_coords(self, r, theta, phi):
-        '''This will convert the Shue coordinates back to xyz coordinates. 
+#    def convert_shue_to_xyz_coords(self, r, theta, phi):
+#        '''This will convert the Shue coordinates back to xyz coordinates. 
         
-        Parameters
-        ----------
-        r, theta (rad), phi (rad)
+#        Parameters
+#        ----------
+#        r, theta (rad), phi (rad)
         
-        Returns
-        -------
-        x,y,z
-        '''
+#        Returns
+#        -------
+#        x,y,z
+#        '''
 
-        x = r*np.cos(theta)
-        y = r*np.sin(theta)*np.cos(phi)
-        z = r*np.sin(theta)*np.sin(phi)
+#        x = r*np.cos(theta)
+#        y = r*np.sin(theta)*np.cos(phi)
+#        z = r*np.sin(theta)*np.sin(phi)
 
-        return x,y,z 
+#        return x,y,z 
 
     #COST FUNCTIONS
     ###############
@@ -313,7 +314,7 @@ class threed_models():
         #        raise ValueError("{} not a valid model. 'jorg' or 'cmem' only atm.".format(self.current_model))
           
         #else: 
-        #    self.param_bounds=None
+        self.param_bounds=None
 
         #GET COST FUNCTION AND MINIMISE IT.
         ###################################

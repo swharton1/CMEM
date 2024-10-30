@@ -55,8 +55,8 @@ params0=None
 #This will read in the PPMLR emissivity cube. 
 print ("Filename is: ", filename) 
 print ("Get PPMLR data") 
-#ppmlr = CMEM.read_fits.read_ppmlr_fits(filename=filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
-#print ("Density = ", ppmlr.density) 
+ppmlr = CMEM.ppmlr_fits.read_ppmlr_fits(filename=filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
+print ("Density = ", ppmlr.density) 
 
 #PLOTTING THE PPMLR DATA CUBES.
 ###############################
@@ -81,15 +81,15 @@ print ("Get PPMLR data")
 
 #FIT A MODEL TO THE PPMLR DATA CUBES. 
 #####################################
-
+print ('Fitting...') 
 #This code is for fitting a model to the PPMLR simulation. 
-#fit_model = CMEM.fit_emissivity_models.threed_models(filename=filename, ppmlr=ppmlr, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
+fit_model = CMEM.fit_emissivity_models.threed_models(filename=filename, ppmlr=ppmlr, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
 #print ("Start fitting...")
 #This does the fitting. 
-#fit_model.fit_function_with_nelder_mead(model=model, params0=params0, set_param_bounds=False, cost_func=cost_func, init_method=init_method)
+fit_model.fit_function_with_nelder_mead(model=model, params0=params0, set_param_bounds=False, cost_func=cost_func, init_method=init_method)
 
 #Save the model output to a pickle file. 
-#fit_model.write_pickle(savetag="") 
+fit_model.write_pickle(savetag="") 
 
 #PLOT THE OUTPUT OF FITTING A MODEL TO THE PPMLR DATA CUBES. 
 ############################################################
