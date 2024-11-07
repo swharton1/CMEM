@@ -38,7 +38,7 @@ class threed_models():
             ts = process_time()
             print ("Reading ppmlr data:")
             #ppmlr = read_ppmlr.read_ppmlr_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
-            ppmlr = ppmlr_fits.read_ppmlr_fits(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
+            ppmlr = read_fits_cube.read_fits_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
             te = process_time()
             print ("Time = {:.1f}s".format(te-ts))
 

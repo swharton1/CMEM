@@ -8,7 +8,7 @@ import os
 # jorgensen model with stated parameters visually. 
 try: 
     #from . import read_ppmlr
-    from . import ppmlr_fits
+    from . import read_fits_cube
     from . import get_names_and_units as gnau 
     from . import get_meridians as gm 
     from . import coord_conv as cconv 
@@ -36,7 +36,7 @@ class compare_data_model():
             print ("Reading ppmlr data:")
             self.filename=filename
             #ppmlr = read_ppmlr.read_ppmlr_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
-            ppmlr = ppmlr_fits.read_ppmlr_fits(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
+            ppmlr = read_fits_cube.read_fits_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
             #ppmlr.reshape_to_3D()
             #ppmlr.apply_limit(c)
             te = process_time()
