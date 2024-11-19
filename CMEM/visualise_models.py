@@ -17,8 +17,9 @@ class analyse_model():
         self.pickle_path = os.environ.get("PICKLE_PATH")
         self.plot_path = os.environ.get("PLOT_PATH")
         self.filename=filename.split("_")[0]
+        self.im_tag = filename.split("_")[-1]
         self.current_model = filename.split("_")[1]
-        
+        print (self.current_model)
         if self.current_model == "cmem":
             self.image_tag = "CMEM"
         else:
@@ -26,9 +27,9 @@ class analyse_model():
 
         # Read in the pickled optimised model. 
         self.model = self.read_pickle(filename, self.current_model)
-        
+        print (self.model['model'])
         #Get the names of the variables and units for plotting. 
-        info = gnau.get_parameter_info(model=self.model['model'])
+        info = gnau.get_parameter_info(model=self.current_model)
         self.parameter_names = [info[i][0] for i in info.keys()]
         self.parameter_units = [info[i][1] for i in info.keys()]
 
@@ -385,6 +386,213 @@ class analyse_model():
            
 
 
+    def plot_cost_values(self, cost='normalised', save=False, savetag="", cmap='hot', vmin=-8, vmax=-4, levels=100, costmin=-16, costmax=-12):
+        '''This will plot the cost values in the 2D planes used in plot planes to help us see where the differences are.''' 
+        
+        #Get meridian data for etad. 
+        xp_y, yp_y, zp_y, etad_y, xp_z, yp_z, zp_z, etad_z = gm.calculate_meridian_planes(self.model['x'], self.model['y'], self.model['z'], self.model['etad'])
+        
+        #Get meridian data for etam. 
+        xp_y, yp_y, zp_y, etam_y, xp_z, yp_z, zp_z, etam_z = gm.calculate_meridian_planes(self.model['x'], self.model['y'], self.model['z'], self.model['etam'])
+        
+        # Calculate log10 eta values. If eta = 0, set log(eta) = vmin  
+        letad_y = np.zeros(etad_y.shape)+vmin
+        i = np.where(etad_y != 0)
+        letad_y[i] = np.log10(etad_y[i])
+        j = np.where(letad_y < vmin)
+        letad_y[j] = vmin 
+
+
+        letam_y = np.zeros(etam_y.shape)+vmin
+        i = np.where(etam_y != 0)
+        letam_y[i] = np.log10(etam_y[i])
+        j = np.where(letam_y < vmin)
+        letam_y[j] = vmin 
+
+
+        letad_z = np.zeros(etad_z.shape)+vmin
+        i = np.where(etad_z != 0)
+        letad_z[i] = np.log10(etad_z[i])
+        j = np.where(letad_z < vmin)
+        letad_z[j] = vmin 
+
+
+        letam_z = np.zeros(etam_z.shape)+vmin
+        i = np.where(etam_z != 0)
+        letam_z[i] = np.log10(etam_z[i])
+        j = np.where(letam_z < vmin)
+        letam_z[j] = vmin 
+        
+
+        
+        #Calculate the cost values here, but not summed up. 
+        if cost == 'normalised':
+            cost_y = ((etam_y - etad_y)**2)/(self.model['etad'].sum())**2 
+            cost_z = ((etam_z - etad_z)**2)/(self.model['etad'].sum())**2 
+            cbar_label = r"$(p_{m}-p_{d})^2/\sum p_{d}^2$"
+        else:
+            raise ValueError('Need to pick a valid cost function.') 
+
+        #Calculate log10 cost values. 
+        lcost_y = np.zeros(cost_y.shape)+costmin
+        i = np.where(cost_y != 0)
+        lcost_y[i] = np.log10(cost_y[i])
+        j = np.where(lcost_y < costmin)
+        lcost_y[j] = costmin
+       
+        #Calculate log10 cost values. 
+        lcost_z = np.zeros(cost_z.shape)+costmin
+        i = np.where(cost_z != 0)
+        lcost_z[i] = np.log10(cost_z[i])
+        j = np.where(lcost_z < costmin)
+        lcost_z[j] = costmin 
+        
+        # Now you can make the contour plot. 
+        fig = plt.figure(figsize=(10,8))
+        fig.subplots_adjust(bottom=0.20, hspace=0.4, wspace=0.3, left=0.1)
+
+        # Get contour levels. 
+        levels = np.linspace(vmin, vmax, levels+1)
+
+        cost_levels = np.linspace(costmin, costmax, 101) 
+
+        # etad_y
+        ax1 = fig.add_subplot(231)
+        cont1 = ax1.contourf(xp_y, zp_y, letad_y, cmap=cmap, levels=levels, vmin=vmin, vmax=vmax)
+        ax1.set_xlabel('X [RE]')
+        ax1.set_ylabel('Z [RE]')
+        ax1.set_title("n = {:.2f} cm".format(self.model['density'])+r"$^{-3}$"+"\nXZ Plane")
+        ax1.set_aspect("equal")
+        self.make_earth(ax1, rotation=-90)
+
+        # Colourbars 
+        cbar = plt.colorbar(cont1, ax=ax1)
+        cbar.set_label(r"eV cm$^{-3}$ s$^{-1}$")
+        level_min = int(np.ceil(cont1.levels.min()))
+        level_max = int(np.floor(cont1.levels.max()))
+        cticks = np.arange(level_min, level_max+1)
+        cbar.set_ticks(cticks)
+        cbar.set_ticklabels([r'$10^{'+str(i)+'}$' for i in cticks])
+
+        # etam_y
+        ax2 = fig.add_subplot(232)
+        cont2 = ax2.contourf(xp_y, zp_y, letam_y, cmap=cmap, levels=cont1.levels, vmin=vmin, vmax=vmax)
+        ax2.set_xlabel('X [RE]')
+        #ax2.set_ylabel('Z [RE]')
+        ax2.set_title("{}\nXZ Plane".format(self.image_tag))
+        ax2.set_aspect("equal")
+        self.make_earth(ax2, rotation=-90)
+
+        # Colourbars 
+        cbar = plt.colorbar(cont2, ax=ax2)
+        cbar.set_label(r"eV cm$^{-3}$ s$^{-1}$")
+        level_min = int(np.ceil(cont2.levels.min()))
+        level_max = int(np.floor(cont2.levels.max()))
+        cticks = np.arange(level_min, level_max+1)
+        cbar.set_ticks(cticks)
+        cbar.set_ticklabels([r'$10^{'+str(i)+'}$' for i in cticks])
+
+        #Cost function for xz plane. 
+        ax2b = fig.add_subplot(233)
+        cont2b = ax2b.contourf(xp_y, zp_y, lcost_y, cmap='grey', levels=cost_levels, vmin=costmin, vmax=costmax) 
+        ax2b.set_xlabel('X [RE]')
+        #ax2b.set_ylabel('Z [RE]')
+        ax2b.set_title("{}\nXZ Plane".format(cost))
+        ax2b.set_aspect('equal')
+        self.make_earth(ax2b, rotation=-90) 
+        
+        # Colourbars 
+        cbar = plt.colorbar(cont2b, ax=ax2b)
+        cbar.set_label(cbar_label)
+        level_min = int(np.ceil(cont2b.levels.min()))
+        level_max = int(np.floor(cont2b.levels.max()))
+        cticks = np.arange(level_min, level_max+1)
+        cbar.set_ticks(cticks)
+        cbar.set_ticklabels([r'$10^{'+str(i)+'}$' for i in cticks])
+
+        # etad_z
+        ax3 = fig.add_subplot(234)
+        cont3 = ax3.contourf(xp_z, yp_z, letad_z, cmap=cmap, levels=levels, vmin=vmin, vmax=vmax)
+        ax3.set_xlabel('X [RE]')
+        ax3.set_ylabel('Y [RE]')
+        ax3.set_title("XY Plane")
+        ax3.set_aspect("equal")
+        self.make_earth(ax3, rotation=-90)
+
+        # Colourbars 
+        cbar = plt.colorbar(cont3, ax=ax3)
+        cbar.set_label(r"eV cm$^{-3}$ s$^{-1}$")
+        level_min = int(np.ceil(cont3.levels.min()))
+        level_max = int(np.floor(cont3.levels.max()))
+        cticks = np.arange(level_min, level_max+1)
+        cbar.set_ticks(cticks)
+        cbar.set_ticklabels([r'$10^{'+str(i)+'}$' for i in cticks])
+
+        # etam_z
+        ax4 = fig.add_subplot(235)
+        cont4 = ax4.contourf(xp_z, yp_z, letam_z, cmap=cmap, levels=cont3.levels, vmin=vmin, vmax=vmax)
+        ax4.set_xlabel('X [RE]')
+        #ax4.set_ylabel('Y [RE]')
+        ax4.set_title("XY Plane")
+        ax4.set_aspect("equal")
+        self.make_earth(ax4, rotation=-90)
+
+        # Colourbars 
+        cbar = plt.colorbar(cont4, ax=ax4)
+        cbar.set_label(r"eV cm$^{-3}$ s$^{-1}$")
+        level_min = int(np.ceil(cont4.levels.min()))
+        level_max = int(np.floor(cont4.levels.max()))
+        cticks = np.arange(level_min, level_max+1)
+        cbar.set_ticks(cticks)
+        cbar.set_ticklabels([r'$10^{'+str(i)+'}$' for i in cticks])
+        
+        
+        #Cost function for xz plane. 
+        ax4b = fig.add_subplot(236)
+        cont4b = ax4b.contourf(xp_z, yp_z, lcost_z, cmap='grey', levels=cost_levels, vmin=costmin, vmax=costmax) 
+        ax4b.set_xlabel('X [RE]')
+        #ax4b.set_ylabel('Y [RE]')
+        ax4b.set_title("{}\nXZ Plane".format(cost))
+        ax4b.set_aspect('equal')
+        self.make_earth(ax4b, rotation=-90) 
+        
+        # Colourbars 
+        cbar = plt.colorbar(cont4b, ax=ax4b)
+        cbar.set_label(cbar_label)
+        level_min = int(np.ceil(cont4b.levels.min()))
+        level_max = int(np.floor(cont4b.levels.max()))
+        cticks = np.arange(level_min, level_max+1)
+        cbar.set_ticks(cticks)
+        cbar.set_ticklabels([r'$10^{'+str(i)+'}$' for i in cticks])
+        
+        print (self.model['min cost'])
+        fig.text(0.95,0.12, 'Min cost = {:.3f}'.format(self.model['min cost']), ha='right', fontsize=10)
+        
+        # Add a label to show the model parameters. 
+        label = ""
+        info = gnau.get_parameter_info(model=self.current_model)
+        parameter_names = [info[i][0] for i in info.keys()]
+        parameter_units = [info[i][1] for i in info.keys()]
+        for p,pval in enumerate(self.model['params best nm']):
+                pv = pval 
+                label += "{}={} {}, ".format(parameter_names[p], self.sig_figs(pv,3), parameter_units[p])
+                if len(parameter_names)//2 == p+1:
+                    label += "\n"
+
+        fig.text(0.5, 0.02, label, ha='center')
+
+        if save: 
+            if self.current_model == 'jorg':
+                print (self.im_tag)
+                im = 2 if self.im_tag == 'A1A2.pkl' else 1
+            else:
+                im = self.model['init method']
+            
+            print (self.plot_path+"{}/{}_data_{}_model_planes_cost_opt_im{}.png".format(self.current_model,self.filename, self.current_model, im))
+            fig.savefig(self.plot_path+"{}/{}_data_{}_model_planes_cost_opt_im{}.png".format(self.current_model,self.filename, self.current_model, im))
+            
+            
+            
     def make_earth(self, ax, rotation=0):
         '''This will add a little plot of the Earth on top for reference. '''
 
