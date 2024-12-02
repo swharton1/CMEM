@@ -104,7 +104,7 @@ class threed_models():
         #function, or as Matt J. called it, the misfit 
         #function. See his FitPlasma.py file in WaveHarmonics. 
 
-        if self.cost_func.lower() == "sum squares":
+        if self.cost_func.lower() == "sum_squares":
             def cost_func_sum_squared_differences_by_n(params):
                 # This cost function is the sum of 
                 #the squared differences divided by n. 
@@ -165,8 +165,26 @@ class threed_models():
 
                 return cost
             return cost_func_sum_squares_by_sum_observed
+            
+        elif self.cost_func.lower() == "chi_squared":
+            def cost_func_chi_squared(params):
+                #THIS DOES NOT WORK BECAUSE IN PLACES, ETA=0 AND YOU CAN'T DIVIDE BY ZERO OR IT DIES. 
+                #ONLY WAY ROUND THIS IS TO FILTER I THINK. 
+                #This cost function is chi-squared, so each squared residual is normalised by its expected (model) value. It is then summed afterwards. 
+                
+                eta_model = self.get_eta_model(params) 
+                
+                # Now get chi squared. 
+                chi_squared = ((eta_model - self.eta)**2)/eta_model
+                cost = chi_squared.sum() 
+                self.cost_per_iteration.append(cost)
+                self.param_list.append(params) 
+                print (cost)
+                
+                return cost 
+            return cost_func_chi_squared 
         else:
-            raise ValueError("Invalid cost function chosen. Select either 'sum squares', 'absolute' or 'normalised'.") 
+            raise ValueError("Invalid cost function chosen. Select either 'sum_squares', 'absolute', 'normalised' or 'chi_squared'.") 
 
     def get_eta_model(self, params):
         '''This function calculates the eta model values for each iteration. This function is intended to be run from the cost function. 

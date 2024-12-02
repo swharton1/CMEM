@@ -40,7 +40,7 @@ zmax=25
 model=cmem
 
 #This is the name of the cost function you want to use when fitting. 
-cost_func=normalised
+cost_func=chi_squared
 
 #This is the method you want to use from the CMEM paper to initialise the starting parameters. 
 init_method=2
