@@ -19,7 +19,7 @@ class compare_models():
             pickle_dict = pickle.load(f)
         return pickle_dict
     
-    def compare_cost_between_models(self, save=True, savetag="", init_method=1, add_bad_fits=False):
+    def compare_cost_between_models(self, save=True, savetag="", init_method=1, add_bad_fits=False, normalisation='normalised'):
 
         # List the filenames of the optimised models you want to compare. 
         if init_method == 2:
@@ -70,6 +70,41 @@ class compare_models():
         cost_jorg = np.array([p["min cost"] for p in pickle_dict_jorg])
         cost_cmem = np.array([p["min cost"] for p in pickle_dict_cmem])
 
+        # Here, we have added an extra step after comments from referee 2 about normalisation. 
+        sum_eta_jorg = np.array([p["etad"].sum() for p in pickle_dict_jorg])
+        sum_eta_cmem = np.array([p["etad"].sum() for p in pickle_dict_cmem])
+        
+        sum_squared_eta_jorg = np.array([(p["etad"]**2).sum() for p in pickle_dict_jorg])
+        sum_squared_eta_cmem = np.array([(p["etad"]**2).sum() for p in pickle_dict_cmem])
+        
+        
+        
+        print (sum_eta_jorg)
+        print (sum_eta_cmem) 
+        print (sum_squared_eta_jorg)
+        print (sum_squared_eta_cmem) 
+
+        #Apply chosen normalisation. 
+        if normalisation == 'normalised':
+            #This is the default I have been using to make the original plots. 
+            cost_unit = ''
+        elif normalisation == 'none': 
+            #This removes all forms of normalisation. 
+            cost_jorg = cost_jorg*sum_squared_eta_jorg
+            cost_cmem = cost_cmem*sum_squared_eta_cmem 
+            cost_unit = '[(eV cm'+r'$^{-3}$ s'+r'$^{-1}$)'+r'$^2$]'
+        elif normalisation == 'eta':
+            #This normalises by the sum of eta, instead of sum of eta squared. 
+            cost_jorg = (cost_jorg*sum_squared_eta_jorg)/sum_eta_jorg
+            cost_cmem = (cost_cmem*sum_squared_eta_cmem)/sum_eta_cmem 
+            cost_unit = '[eV cm'+r'$^{-3}$ s'+r'$^{-1}$]'
+        else:
+            raise ValueError("Not picked a valid normalising constant: 'normalised', 'none' or 'eta'")    
+            
+            
+
+
+
         # Sort title and linestyle out. 
         if init_method == 2:
             title = "Variation of Cost with Solar Wind Density: Method 2"
@@ -87,7 +122,7 @@ class compare_models():
         ax.plot(density_jorg, cost_jorg, "b", marker='x', linestyle=ls, label="Jorgensen")
         ax.plot(density_cmem, cost_cmem, "r", marker='x', linestyle=ls, label="CMEM")
         ax.set_xlabel("Density (cm"+r"$^{-3}$"+")")
-        ax.set_ylabel("Minimum Cost")
+        ax.set_ylabel("Minimum Cost "+cost_unit)
         ax.set_title(title)
         ax.legend(loc="best")
         ax.grid()
@@ -98,8 +133,11 @@ class compare_models():
             ax.plot(density_cmem[0], cost_cmem[0], marker='x', c='k', zorder=3)
             #ax.plot(density_cmem[1], cost_cmem[1], marker='x', c='k', zorder=3)
 
+        #Add label to show normalisation method. 
+        fig.text(0.9,0.03,normalisation, ha='right', fontsize=8) 
+
         if save:
-            fig.savefig(self.plot_path+"cost_comparison{}.png".format(savetag))
+            fig.savefig(self.plot_path+"cost_comparison{}_{}.png".format(savetag, normalisation))
 
 
 
