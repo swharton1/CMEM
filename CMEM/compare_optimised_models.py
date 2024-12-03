@@ -77,13 +77,17 @@ class compare_models():
         sum_squared_eta_jorg = np.array([(p["etad"]**2).sum() for p in pickle_dict_jorg])
         sum_squared_eta_cmem = np.array([(p["etad"]**2).sum() for p in pickle_dict_cmem])
         
+        N_jorg = np.array([p["etad"].size for p in pickle_dict_jorg]) 
+        N_cmem = np.array([p["etad"].size for p in pickle_dict_cmem]) 
         
         
         print (sum_eta_jorg)
         print (sum_eta_cmem) 
         print (sum_squared_eta_jorg)
         print (sum_squared_eta_cmem) 
-
+        print (N_jorg)
+        print (N_cmem) 
+        
         #Apply chosen normalisation. 
         if normalisation == 'normalised':
             #This is the default I have been using to make the original plots. 
@@ -98,6 +102,12 @@ class compare_models():
             cost_jorg = (cost_jorg*sum_squared_eta_jorg)/sum_eta_jorg
             cost_cmem = (cost_cmem*sum_squared_eta_cmem)/sum_eta_cmem 
             cost_unit = '[eV cm'+r'$^{-3}$ s'+r'$^{-1}$]'
+        elif normalisation == 'N':
+            #This just normalises by the number of data points, 
+            #only taking into account the size of the cube. 
+            cost_jorg = (cost_jorg*sum_squared_eta_jorg)/N_jorg
+            cost_cmem = (cost_cmem*sum_squared_eta_cmem)/N_cmem 
+            cost_unit = '[(eV cm'+r'$^{-3}$ s'+r'$^{-1}$)'+r'$^2$]'
         else:
             raise ValueError("Not picked a valid normalising constant: 'normalised', 'none' or 'eta'")    
             
