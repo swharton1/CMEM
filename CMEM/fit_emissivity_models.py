@@ -9,10 +9,11 @@ import os
 
 try: 
     #from . import read_ppmlr
-    from . import ppmlr_fits
+    #from . import ppmlr_fits
     from . import boundary_emissivity_functions as bef
-    from . import set_initial_params as sip 
-    from . import coord_conv as cconv 
+    from SXI_Core import set_initial_params as sip 
+    from SXI_Core import coord_conv as cconv 
+    from SXI_Core import read_fits_cube
     
 except(ImportError):
     print ("Are you working from the right directory? ")
@@ -38,7 +39,7 @@ class threed_models():
             ts = process_time()
             print ("Reading ppmlr data:")
             #ppmlr = read_ppmlr.read_ppmlr_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
-            ppmlr = read_fits_cube.read_fits_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
+            ppmlr = read_fits_cube.read_fits_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax, filetype='PPMLR')
             te = process_time()
             print ("Time = {:.1f}s".format(te-ts))
 

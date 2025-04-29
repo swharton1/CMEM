@@ -9,20 +9,16 @@ if "PLOT_PATH" not in os.environ:
 if "PICKLE_PATH" not in os.environ:
     os.environ["PICKLE_PATH"] = "/data/sol-ionosphere/sw682/pickled_files/CMEM_pickled_models/" 
 if "PPMLR_PATH" not in os.environ:
-    os.environ["PPMLR_PATH"] = "/data/sol-ionosphere/SMILE/PPMLR/"
-#os.environ["OPENGGCM_PATH"] = "/Users/sw682/Documents/Local_Code/CMEM/OpenGGCM/" 
+    os.environ["PPMLR_PATH"] = "/data/smile/PPMLR/"
 
-from . import read_ppmlr
+
 from . import visualise_nonopt
-from . import fit_emissivity_models_old
+from . import fit_emissivity_models_old #Redundant 
 from . import fit_emissivity_models 
 from . import visualise_models
 from . import compare_optimised_models 
-from . import get_names_and_units 
 from . import boundary_emissivity_functions 
-from . import set_initial_params 
-from . import get_meridians
-from . import ppmlr_fits 
-from . import coord_conv
+from . import ppmlr_fits #Redundant 
+
 
  

@@ -3,9 +3,11 @@ import matplotlib.pyplot as plt
 import os
 import pickle
 
-from . import get_names_and_units as gnau 
+
+from SXI_Core import get_names_and_units as gnau 
+from SXI_Core import get_meridians as gm 
 from . import boundary_emissivity_functions as bef
-from . import get_meridians as gm 
+
 
 class compare_models():
     def __init__(self):

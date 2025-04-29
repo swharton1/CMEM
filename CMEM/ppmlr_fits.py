@@ -4,11 +4,13 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib.patches import Wedge, Polygon, Circle
 
-from . import read_ppmlr 
-from . import get_meridians as gm 
+from SXI_Core import read_ppmlr 
+from SXI_Core import get_meridians as gm 
 
 class read_ppmlr_fits():
-    '''This class will read in the PPMLR fits file and add the data to a python object in the same format as read_ppmlr_cube()''' 
+    '''This class will read in the PPMLR fits file and add the data to a python object in the same format as read_ppmlr_cube()
+    
+    THIS IS REDUNDANT NOW YOU HAVE READ_FITS_CUBE IN SXI_CORE.''' 
     
     def __init__(self, filename='S05D05V400B0000-05rad.fits', xmin=None, xmax=None, ymin=None, ymax=None, zmin=None, zmax=None): 
     

@@ -7,6 +7,8 @@ from matplotlib.patches import Wedge, Polygon, Circle
 import pickle
 import os
 
+#THIS IS REDUNDANT TOO! 
+
 #This is the original version of the fitting code that has all the 
 #functions stored internally instead of reading them from 
 #boundary_emissivity_functions.py. I kept it in case I screwed up 

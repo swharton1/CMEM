@@ -8,12 +8,12 @@ import os
 # jorgensen model with stated parameters visually. 
 try: 
     #from . import read_ppmlr
-    from . import read_fits_cube
-    from . import get_names_and_units as gnau 
-    from . import get_meridians as gm 
-    from . import coord_conv as cconv 
+    from SXI_Core import read_fits_cube
+    from SXI_Core import get_names_and_units as gnau 
+    from SXI_Core import get_meridians as gm 
+    from SXI_Core import coord_conv as cconv 
     from . import boundary_emissivity_functions as bef
-    from . import set_initial_params as sip 
+    from SXI_Core import set_initial_params as sip 
     
     
 except(ImportError):
@@ -36,7 +36,7 @@ class compare_data_model():
             print ("Reading ppmlr data:")
             self.filename=filename
             #ppmlr = read_ppmlr.read_ppmlr_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
-            ppmlr = read_fits_cube.read_fits_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax)
+            ppmlr = read_fits_cube.read_fits_cube(filename=self.filename, xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, zmin=zmin, zmax=zmax, filetype='PPMLR')
             #ppmlr.reshape_to_3D()
             #ppmlr.apply_limit(c)
             te = process_time()
