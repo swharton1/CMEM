@@ -18,6 +18,7 @@ from . import fit_emissivity_models
 from . import visualise_models
 from . import compare_optimised_models 
 from . import boundary_emissivity_functions 
+from . import SXI_Core
 
 
 

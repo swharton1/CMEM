@@ -11,9 +11,9 @@ try:
     #from . import read_ppmlr
     #from . import ppmlr_fits
     from . import boundary_emissivity_functions as bef
-    from SXI_Core import set_initial_params as sip 
-    from SXI_Core import coord_conv as cconv 
-    from SXI_Core import read_fits_cube
+    from .SXI_Core import set_initial_params as sip 
+    from .SXI_Core import coord_conv as cconv 
+    from .SXI_Core import read_fits_cube
     
 except(ImportError):
     print ("Are you working from the right directory? ")

@@ -8,12 +8,12 @@ import os
 # jorgensen model with stated parameters visually. 
 try: 
     #from . import read_ppmlr
-    from SXI_Core import read_fits_cube
-    from SXI_Core import get_names_and_units as gnau 
-    from SXI_Core import get_meridians as gm 
-    from SXI_Core import coord_conv as cconv 
+    from .SXI_Core import read_fits_cube
+    from .SXI_Core import get_names_and_units as gnau 
+    from .SXI_Core import get_meridians as gm 
+    from .SXI_Core import coord_conv as cconv 
     from . import boundary_emissivity_functions as bef
-    from SXI_Core import set_initial_params as sip 
+    from .SXI_Core import set_initial_params as sip 
     
     
 except(ImportError):

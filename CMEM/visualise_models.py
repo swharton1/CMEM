@@ -4,8 +4,8 @@ import os
 import pickle
 from matplotlib.patches import Wedge, Polygon, Circle
 import string 
-from SXI_Core import get_names_and_units as gnau 
-from SXI_Core import get_meridians as gm 
+from .SXI_Core import get_names_and_units as gnau 
+from .SXI_Core import get_meridians as gm 
 
 # Create a separate object to analyse the results of the fitting procedure. 
 # This means the optimisation doesn't need running every time you change a plot! 
